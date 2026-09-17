@@ -262,13 +262,13 @@ body.yt-immersive .freetextSec { display: none !important; }
       { text: '1日の終わりに一番近い気持ち', choices: ['「今日なにしてたっけ…？」', '「疲れたけどまぁOK」', '「やったけど進んだ感がない」'] },
       { text: '「ちゃんとやらなきゃ」と思った瞬間', choices: ['全部ちゃんとやろうとして詰む', 'ほどほどでOKにできる', '考えすぎて動けなくなる'] }
     ],
-    // 合計が min 点以上で判定（上から順）。registerUrl はタイプ別リザスト登録ページ（ステップメール 368527/368530/368531）。hook は結果メール冒頭（さわさん本人の文）から引用。art は下の ART のキー
+    // 合計が min 点以上で判定（上から順）。registerUrl はタイプ別リザスト登録ページ（多目的ページ 162335/162336/162338。申込完了メール＝詳しい結果の1通だけ届く）。hook は結果メール冒頭（さわさん本人の文）から引用。art は下の ART のキー
     types: [
-      { min: 100, art: 'spin', registerUrl: 'https://www.reservestock.jp/subscribe/NTE2ZjdlMWUyM', name: 'がんばりすぎて<wbr>空回りタイプ',
+      { min: 100, art: 'spin', registerUrl: 'https://www.reservestock.jp/inquiry/OGU1MTBhNTdlN', name: 'がんばりすぎて<wbr>空回りタイプ',
         hook: '「今日めっちゃ頑張ったのに、\n結局なに進んだんだっけ…？」\n\n↑これ、週3で思ってません？' },
-      { min: 85, art: 'drift', registerUrl: 'https://www.reservestock.jp/subscribe/YzZiYzhmYjM4Y', name: 'なんとなく<wbr>進んでないタイプ',
+      { min: 85, art: 'drift', registerUrl: 'https://www.reservestock.jp/inquiry/N2Q2ZWMyOGY1Y', name: 'なんとなく<wbr>進んでないタイプ',
         hook: 'やることはやってる。ちゃんと生きてる。\n\nでも、「で、私は何が進んだんだろう？」\nってなりませんか？' },
-      { min: -Infinity, art: 'calm', registerUrl: 'https://www.reservestock.jp/subscribe/NWNjMjQ0YWRlY', name: 'もうすぐ<wbr>整うタイプ',
+      { min: -Infinity, art: 'calm', registerUrl: 'https://www.reservestock.jp/inquiry/NjUzODJkNTY2N', name: 'もうすぐ<wbr>整うタイプ',
         hook: '惜しい。かなり惜しい。\n\nちゃんと休める日もある。\n「まあいっか」も言える。\nでも、なぜか波がある。' }
     ],
     intro: {
