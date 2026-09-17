@@ -277,7 +277,7 @@ body.yt-immersive .freetextSec { display: none !important; }
       // ページに本物のメインビジュアル画像がある時は自動で出さず、title だけのコンパクト表示になる
       showHero: 'auto', // 'auto' | true | false
       title: '心のゆとり診断テスト',
-      lede: '毎日ちゃんとやってるのに進んでない感じには、タイプがあるんです。1分で、自分に合った“余白の作り方”がわかります。',
+      lede: '', // 冒頭のメインビジュアルと内容が重なるため削除（さわさん指摘 2026-09-17）。入れる場合はここに文を書く
       voicesTitle: 'こんな心の声、ありませんか',
       voices: [
         '今日めっちゃ頑張ったのに、結局なに進んだんだっけ…？',
@@ -461,7 +461,7 @@ body.yt-immersive .freetextSec { display: none !important; }
       app.innerHTML = '<div class="yt-screen">' + mv +
         '<section class="yt-hero">' + (hero ? '' : '<h2 class="yt-title">' + esc(I.title) + '</h2>') + '<div class="yt-chips">' +
         I.chips.map(function (c, i) { return '<span class="yt-chip' + (i === 0 ? ' is-free' : '') + '">' + esc(c) + '</span>'; }).join('') +
-        '</div><p class="yt-lede">' + esc(I.lede) + '</p></section>' +
+        '</div>' + (I.lede ? '<p class="yt-lede">' + esc(I.lede) + '</p>' : '') + '</section>' +
         '<section class="yt-voices"><p class="yt-sec">' + esc(I.voicesTitle) + '</p>' +
         I.voices.map(function (v, i) { return '<div class="yt-bubble' + (i % 2 ? ' is-r' : '') + '">' + esc(v) + '</div>'; }).join('') +
         '<p class="yt-note">' + esc(I.voicesNote) + '</p></section>' +
