@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>心のゆとり診断テスト｜あまのさわ</title>
+<meta name="description" content="5問・1分。「今日くらいは、まぁいいか」がなかなか言えない人のための、心のゆとりタイプ診断。自分に合った余白の作り方がわかります。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="心のゆとり診断テスト｜あまのさわ">
+<meta property="og:description" content="5問・1分。「今日くらいは、まぁいいか」がなかなか言えない人のための、心のゆとりタイプ診断。自分に合った余白の作り方がわかります。">
+<meta property="og:url" content="https://pochita1202.github.io/kokoro-yutori-shindan/">
+<meta property="og:image" content="https://pochita1202.github.io/kokoro-yutori-shindan/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="あまのさわ">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://pochita1202.github.io/kokoro-yutori-shindan/">
+<meta name="theme-color" content="#0097a7">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap">
+<style>
+html,body{margin:0;padding:0}
+body{background:linear-gradient(180deg,#e9f3fb 0,#f6fbfe 320px,#fff 100%);color:#1f3b5b;font-family:"M PLUS 1","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+.site-main{padding:20px 12px 8px}
+.site-foot{text-align:center;font-size:12px;color:#5b6f84;padding:8px 16px 32px;line-height:1.8}
+.site-noscript{max-width:430px;margin:0 auto;padding:24px 20px;background:#fff;border:1px solid #e3eaf2;border-radius:18px;line-height:1.8;font-size:15px}
+.site-noscript a{color:#006d79}
+</style>
+<style>
+/* ===== 心のゆとり診断 アプリ版（元LPの見た目に寄せた版。単体ページ／リザスト埋め込み共用） =====
+   元LP（page/fast_scoring/3202）の実測値：
+   teal #0097a7 / deep teal #006d79・#006064 / 設問ヘッダー水色 #ddfcfc + navy #1f3b5b /
+   選択肢 #fafbfd + #dfe6ee、選択時 #eef6ff + #3b82c4 / 本文 M PLUS 1 / メインビジュアル＝明朝ネイビー #1e3f9e ＋黄色マーカー */
+
+.yt-on {
+  --paper: #ffffff;
+  --paper-2: #f4fafc;
+  --ink: #1f3b5b;
+  --ink-soft: #5b6f84;
+  --line: #e3eaf2;
+  --teal: #0097a7;
+  --teal-deep: #006d79;
+  --aqua: #ddfcfc;        /* 設問ヘッダー・心の声 */
+  --sel-bg: #eef6ff;
+  --sel-line: #3b82c4;
+  --navy: #1e3f9e;        /* メインビジュアルの明朝見出し */
+  --marker: #ffe27a;      /* メインビジュアルの黄色マーカー */
+  --serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --sans: "M PLUS 1", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+
+  display: block; box-sizing: border-box; width: 100%; max-width: 430px; margin: 0 auto 40px;
+  padding: 22px 22px 30px; background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 22px rgba(31, 59, 91, .08);
+  overflow: clip; /* ヒーローの角を丸める。clip は sticky を壊さない */
+  font-family: var(--sans); font-size: 15px; line-height: 1.8; text-align: left;
+  -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
+}
+
+/* --- ステージ制御（JSが form にクラスを付けた時だけ効く＝JS無効なら従来表示のまま） --- */
+.yt-on #fast_scoring_items { display: none !important; }
+.yt-on:not(.yt-stage-register) .page2-form-customer-block,
+.yt-on:not(.yt-stage-register) #button,
+.yt-on:not(.yt-stage-register) #errors { display: none !important; }
+body.yt-immersive .freetextSec { display: none !important; }
+
+#yutoriApp, #yutoriApp *, #yutoriApp *::before, #yutoriApp *::after { box-sizing: border-box; }
+#yutoriApp p { margin: 0; }
+#yutoriApp button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+#yutoriApp .yt-screen { display: flex; flex-direction: column; gap: 26px; animation: ytIn .4s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ytIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+#yutoriApp mark, #yutoriApp .yt-mk { color: inherit; padding: 0 .08em;
+  background: linear-gradient(transparent 60%, var(--marker) 60%, var(--marker) 92%, transparent 92%); }
+
+/* --- 共通パーツ --- */
+#yutoriApp .yt-sec { font-weight: 700; font-size: 15px; line-height: 1.5; color: #222; margin-bottom: 12px;
+  padding: 3px 0 5px 10px; border-left: 4px solid var(--teal-deep); border-bottom: 2px solid var(--teal-deep); }
+#yutoriApp .yt-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+#yutoriApp .yt-chip { font-size: 11.5px; letter-spacing: .06em; padding: 4px 11px; border-radius: 999px; line-height: 1.6;
+  background: #fff; color: var(--teal-deep); border: 1px solid #b9e3e8; }
+#yutoriApp .yt-chip.is-free { background: var(--teal); color: #fff; border-color: var(--teal); font-weight: 700; }
+#yutoriApp .yt-bubble { background: var(--aqua); border-radius: 18px 18px 18px 4px; padding: 10px 14px;
+  font-size: 14.5px; line-height: 1.7; width: fit-content; max-width: 92%; }
+#yutoriApp .yt-bubble.is-r { align-self: flex-end; border-radius: 18px 18px 4px 18px; background: var(--sel-bg); }
+#yutoriApp .yt-thumb svg, #yutoriApp .yt-art svg, #yutoriApp .yt-gift-ico svg { display: block; width: 100%; height: 100%; }
+#yutoriApp .yt-thumb { width: 100%; aspect-ratio: 4 / 3; border-radius: 9px; overflow: hidden; }
+#yutoriApp .yt-art { width: 100%; max-width: 300px; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden;
+  border: 4px solid #fff; box-shadow: 0 8px 24px rgba(30, 63, 158, .16); }
+#yutoriApp .yt-btn { display: block; width: 100%; text-align: center; text-decoration: none; border: 0; border-radius: 50px; padding: 16px 18px;
+  background: linear-gradient(358deg, #0097a7, #006064); color: #fff; font-weight: 700; font-size: 18px; line-height: 1.4;
+  box-shadow: 0 8px 20px rgba(0, 109, 121, .28); letter-spacing: .04em; transition: transform .12s ease, filter .12s ease; }
+#yutoriApp .yt-btn:hover { filter: brightness(1.08); }
+#yutoriApp .yt-btn:active { transform: scale(.985); }
+#yutoriApp button:focus-visible { outline: 3px solid rgba(59, 130, 196, .5); outline-offset: 3px; }
+
+/* --- 入り口：メインビジュアル風ヒーロー（ページに本物のメインビジュアルがある時は出さない） --- */
+#yutoriApp .yt-mv { margin: -22px -22px 0; padding: 28px 22px 22px; font-family: var(--serif); color: #222;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(176, 214, 186, .55), transparent 42%),
+    radial-gradient(circle at 8% 92%, rgba(255, 255, 255, .95), transparent 46%),
+    radial-gradient(circle at 60% 40%, rgba(255, 255, 255, .7), transparent 38%),
+    linear-gradient(135deg, #d6e6f7 0%, #eef6fd 52%, #dcebe6 100%); }
+#yutoriApp .yt-mv-copy { font-weight: 700; line-height: 1.5; letter-spacing: .02em; }
+#yutoriApp .yt-mv-copy .l1 { display: block; font-size: 23px; color: var(--navy); }
+#yutoriApp .yt-mv-copy .l2 { display: block; font-size: 40px; line-height: 1.3; color: var(--navy); }
+#yutoriApp .yt-mv-copy .l2 small { font-size: 22px; color: #222; }
+#yutoriApp .yt-mv-copy .l3 { display: block; font-size: 22px; margin-top: 4px; }
+#yutoriApp .yt-mv-copy .l4 { display: block; font-size: 30px; color: var(--navy); letter-spacing: .06em; }
+#yutoriApp .yt-mv-name { margin-top: 14px; padding-top: 10px; border-top: 1.5px solid var(--navy);
+  font-weight: 700; font-size: 19px; letter-spacing: .32em; color: var(--navy); white-space: nowrap; }
+#yutoriApp .yt-mv-row { margin-top: 14px; display: flex; align-items: center; gap: 14px; }
+#yutoriApp .yt-mv-badge { flex: none; width: 74px; height: 74px; border-radius: 50%; background: #fff; color: var(--navy);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; line-height: 1.15;
+  box-shadow: 0 4px 14px rgba(30, 63, 158, .12); }
+#yutoriApp .yt-mv-badge b { font-size: 25px; line-height: 1.1; }
+#yutoriApp .yt-mv-sub { font-weight: 700; font-size: 15.5px; line-height: 1.6; color: var(--navy); padding-left: 14px; border-left: 1.5px solid var(--navy); }
+#yutoriApp .yt-title { font-family: var(--serif); font-weight: 700; font-size: 25px; line-height: 1.45; margin: 0; color: var(--navy);
+  letter-spacing: .04em; border: 0; padding: 0; background: none; }
+
+#yutoriApp .yt-hero { display: flex; flex-direction: column; gap: 14px; }
+#yutoriApp .yt-lede { color: var(--ink); font-size: 14.5px; }
+#yutoriApp .yt-voices { display: flex; flex-direction: column; gap: 10px; }
+#yutoriApp .yt-voices .yt-sec { margin-bottom: 4px; }
+#yutoriApp .yt-note { font-size: 13.5px; margin-top: 6px; }
+#yutoriApp .yt-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+#yutoriApp .yt-tcard { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 5px 5px 10px;
+  text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(31, 59, 91, .06); }
+#yutoriApp .yt-tcard b { font-size: 12px; line-height: 1.45; font-weight: 700; color: var(--ink); }
+#yutoriApp .yt-tcard.is-blur b { color: transparent; text-shadow: 0 0 7px rgba(31, 59, 91, .55); }
+#yutoriApp .yt-types-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; }
+#yutoriApp .yt-gift { display: flex; gap: 12px; align-items: center; border: 1.5px dashed var(--teal); border-radius: 12px;
+  padding: 12px 14px; background: #f7fdfe; }
+#yutoriApp .yt-gift-ico { width: 46px; height: 46px; flex: none; }
+#yutoriApp .yt-gift b { font-size: 14px; display: block; color: var(--teal-deep); }
+#yutoriApp .yt-gift span { font-size: 12.5px; color: var(--ink-soft); line-height: 1.7; display: block; }
+#yutoriApp .yt-who { display: flex; gap: 12px; align-items: flex-start; }
+#yutoriApp .yt-avatar { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 35% 30%, #f3faf6, #cfe6ee); border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(31, 59, 91, .15); display: grid; place-items: center; }
+#yutoriApp .yt-avatar svg { width: 36px; height: 36px; }
+#yutoriApp .yt-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#yutoriApp .yt-who b { font-family: var(--serif); font-size: 14.5px; display: block; color: #222; }
+#yutoriApp .yt-who p { margin-top: 2px; font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+#yutoriApp .yt-cta { position: sticky; bottom: 0; z-index: 2; margin-top: -8px; padding: 22px 0 12px;
+  background: linear-gradient(transparent, var(--paper) 38%); }
+#yutoriApp .yt-cta.is-static { position: static; margin-top: 0; padding: 0; background: none; }
+#yutoriApp .yt-cta small { display: block; text-align: center; font-size: 11.5px; color: var(--ink-soft); margin-top: 8px; }
+
+/* --- 質問：元LPの設問カード（水色ヘッダー＋選択肢）をそのまま1問ずつに --- */
+#yutoriApp .yt-qbar { display: flex; align-items: center; gap: 12px; }
+#yutoriApp .yt-back { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line);
+  background: #fff; color: var(--teal-deep); font-size: 18px; line-height: 1; padding: 0; }
+#yutoriApp .yt-steps { flex: 1; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 5px; }
+#yutoriApp .yt-steps i { height: 6px; border-radius: 99px; background: #e8f1f5; transition: background .3s; }
+#yutoriApp .yt-steps i.is-done { background: #7fcdd6; }
+#yutoriApp .yt-steps i.is-now { background: var(--teal); }
+#yutoriApp .yt-count { flex: none; font-size: 12.5px; font-weight: 700; color: var(--teal-deep); font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+#yutoriApp .yt-qcard { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+  box-shadow: 0 6px 22px rgba(31, 59, 91, .08); margin: 0 -6px; }
+#yutoriApp .yt-q { background: var(--aqua); padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 4px; min-height: 6.4em; }
+#yutoriApp .yt-qno { font-weight: 700; font-size: 12px; color: var(--teal-deep); letter-spacing: .14em; }
+#yutoriApp .yt-qtext { font-weight: 700; font-size: 18px; line-height: 1.55; color: var(--ink); }
+#yutoriApp .yt-choices { display: flex; flex-direction: column; gap: 12px; padding: 18px 14px 18px; }
+#yutoriApp .yt-choice { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 15px 14px;
+  font-size: 15.5px; line-height: 1.55; color: #243447; background: #fafbfd; border: 1.5px solid #dfe6ee; border-radius: 12px;
+  transition: background .15s, border-color .15s, transform .1s; }
+#yutoriApp .yt-choice:hover { border-color: #9cc3e6; }
+#yutoriApp .yt-choice:active { transform: scale(.985); }
+#yutoriApp .yt-dot { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #8a97a6; background: #fff; position: relative; }
+#yutoriApp .yt-choice.is-selected { background: var(--sel-bg); border-color: var(--sel-line); }
+#yutoriApp .yt-choice.is-selected .yt-dot { border-color: var(--sel-line); }
+#yutoriApp .yt-choice.is-selected .yt-dot::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--sel-line); }
+#yutoriApp .yt-hint { text-align: center; font-size: 12.5px; color: var(--ink-soft); }
+
+/* --- 診断中 --- */
+#yutoriApp .yt-loading { align-items: center; padding: 70px 0 80px; gap: 20px; }
+#yutoriApp .yt-loading p { font-weight: 700; font-size: 15px; color: var(--teal-deep); }
+#yutoriApp .yt-breath { width: 64px; height: 64px; border-radius: 50%; background: var(--aqua); border: 1.5px solid #bfeef0;
+  display: grid; place-items: center; animation: ytBreath 1.3s ease-in-out infinite; }
+#yutoriApp .yt-breath svg { width: 40px; height: 40px; }
+@keyframes ytBreath { 0%,100% { transform: scale(.9); } 50% { transform: scale(1.08); } }
+
+/* --- 結果 --- */
+#yutoriApp .yt-result { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;
+  margin: -22px -22px 0; padding: 26px 22px 24px;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(176, 214, 186, .45), transparent 40%),
+    linear-gradient(180deg, #e3eefa 0%, #f3f9fe 55%, #fff 100%); }
+#yutoriApp .yt-result-lead { font-family: var(--serif); font-weight: 700; font-size: 15px; color: #222; letter-spacing: .08em; }
+#yutoriApp .yt-type { font-family: var(--serif); font-weight: 700; font-size: clamp(22px, 6.6vw, 28px); line-height: 1.5; color: var(--navy);
+  letter-spacing: .03em; word-break: keep-all; overflow-wrap: anywhere; }
+#yutoriApp .yt-result .yt-bubble { margin-top: 8px; text-align: left; white-space: pre-line; max-width: 100%; align-self: stretch; width: auto;
+  padding: 14px 16px; background: #fff; border: 1px solid var(--line); box-shadow: 0 4px 14px rgba(31, 59, 91, .06); }
+#yutoriApp .yt-locked { display: flex; flex-direction: column; gap: 8px; }
+#yutoriApp .yt-locked .yt-sec { margin-bottom: 6px; }
+#yutoriApp .yt-lock { display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px; font-size: 14px; line-height: 1.65;
+  background: #f7fdfe; border: 1px solid #d3eef1; border-radius: 12px; }
+#yutoriApp .yt-lock svg { flex: none; margin-top: 4px; }
+#yutoriApp .yt-arrow { text-align: center; font-weight: 700; font-size: 14px; color: var(--teal-deep); }
+#yutoriApp .yt-arrow::after { content: ""; display: block; width: 9px; height: 9px; margin: 6px auto 0;
+  border-right: 2.5px solid var(--teal); border-bottom: 2.5px solid var(--teal); transform: rotate(45deg); animation: ytBob 1.4s ease-in-out infinite; }
+@keyframes ytBob { 0%,100% { transform: translateY(0) rotate(45deg); } 50% { transform: translateY(5px) rotate(45deg); } }
+#yutoriApp .yt-retry { align-self: center; background: none; border: 0; padding: 4px 8px; font-size: 12.5px; color: var(--ink-soft); text-decoration: underline; }
+
+/* --- リザスト純正の登録欄・送信ボタン（色は元LPのまま。幅と角だけ整える） --- */
+.yt-on.yt-stage-register .page2-form-customer-block { margin-top: 22px; }
+.yt-on .page2-form-customer-block input[type=text],
+.yt-on .page2-form-customer-block input[type=email] { box-sizing: border-box; max-width: 100%; font-size: 16px; padding: 12px 14px;
+  border: 1.5px solid #dfe6ee; border-radius: 12px; background: #fff; color: #243447; }
+.yt-on .page2-form-customer-block input[type=text]:focus { outline: 3px solid rgba(59, 130, 196, .25); border-color: var(--sel-line); }
+.yt-on #button { margin-top: 22px; text-align: center; }
+.yt-on #button a.button { display: block; width: 100%; box-sizing: border-box; padding: 16px 18px; border-radius: 50px;
+  font-family: var(--sans); font-weight: 700; font-size: 18px; line-height: 1.4; letter-spacing: .04em; text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0, 109, 121, .28); }
+
+@media (max-width: 480px) {
+  .yt-on { padding: 20px 18px 26px; }
+  #yutoriApp .yt-mv, #yutoriApp .yt-result { margin-left: -18px; margin-right: -18px; margin-top: -20px; padding-left: 18px; padding-right: 18px; }
+  #yutoriApp .yt-mv-copy .l2 { font-size: 36px; }
+  #yutoriApp .yt-mv-name { font-size: 17px; letter-spacing: .26em; }
+  #yutoriApp .yt-mv-row { gap: 12px; }
+  #yutoriApp .yt-mv-sub { font-size: 14px; padding-left: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #yutoriApp .yt-screen, #yutoriApp .yt-breath, #yutoriApp .yt-arrow::after { animation: none; }
+  #yutoriApp .yt-btn, #yutoriApp .yt-choice, #yutoriApp .yt-steps i { transition: none; }
+}
+</style>
+</head>
+<body>
+<main class="site-main">
+<div id="yutori-root">
+<div class="site-noscript"><strong>心のゆとり診断テスト</strong><br>この診断は JavaScript を使います。うまく表示されない場合は、<a href="https://www.reservestock.jp/page/fast_scoring/3202">こちらの診断ページ</a>からお試しください。</div>
+</div>
+</main>
+<footer class="site-foot">あまのさわ｜「ラク生き」サポーター</footer>
+<script>
+/* ===== 心のゆとり診断 アプリ版（元LPの見た目に寄せた版） =====
+   2つのモードで動く：
+   A) 単体ページ（本番・外部設置）… <div id="yutori-root"> に描画。質問は CONFIG.questions。
+      結果画面のボタンからタイプ別のリザスト登録ページ（CONFIG.types[].registerUrl）へ送る。
+   B) リザスト fast_scoring 埋め込み … ページに #fast_scoring_items があれば既存フォームを着せ替える
+      （リザストの告知文エディタが script を除去するため現状は使えない。保守用に残置） */
+(function () {
+  'use strict';
+
+  // ▼ 設定。scores / types はリザスト「質問と回答と点数の設定」「合計得点と答えの編集」と同じ値にする
+  var CONFIG = {
+    scores: [
+      [25, 10, 20],
+      [25, 20, 15],
+      [25, 20, 15],
+      [25, 15, 20],
+      [25, 15, 20]
+    ],
+    // 単体ページ用の質問（リザスト #3202 と同じ文言・順番。scores と対応）
+    questions: [
+      { text: '休日は、どんな過ごし方になることが多い？', choices: ['気づくと予定がたくさん入っている', 'のんびり過ごしてリフレッシュできる', 'スマホや動画を見ていたら1日が終わる'] },
+      { text: '「ちょっとお願いしてもいい？」と言われたとき', choices: ['反射で「いいよ！」って言ってる', '一瞬考えるけど結局やる', '「今は無理」とちゃんと言える'] },
+      { text: 'やることがある日の夜', choices: ['「明日がんばってやろう」って思う。', 'ちょっとやろうとするけど、気づいたら時間切れ', 'ほんの少しだけでも手をつけたら「今日はOK」'] },
+      { text: '1日の終わりに一番近い気持ち', choices: ['「今日なにしてたっけ…？」', '「疲れたけどまぁOK」', '「やったけど進んだ感がない」'] },
+      { text: '「ちゃんとやらなきゃ」と思った瞬間', choices: ['全部ちゃんとやろうとして詰む', 'ほどほどでOKにできる', '考えすぎて動けなくなる'] }
+    ],
+    // 合計が min 点以上で判定（上から順）。registerUrl はタイプ別リザスト登録ページ（ステップメール 368527/368530/368531）。hook は結果メール冒頭（さわさん本人の文）から引用。art は下の ART のキー
+    types: [
+      { min: 100, art: 'spin', registerUrl: 'https://www.reservestock.jp/subscribe/NTE2ZjdlMWUyM', name: 'がんばりすぎて<wbr>空回りタイプ',
+        hook: '「今日めっちゃ頑張ったのに、\n結局なに進んだんだっけ…？」\n\n↑これ、週3で思ってません？' },
+      { min: 85, art: 'drift', registerUrl: 'https://www.reservestock.jp/subscribe/YzZiYzhmYjM4Y', name: 'なんとなく<wbr>進んでないタイプ',
+        hook: 'やることはやってる。ちゃんと生きてる。\n\nでも、「で、私は何が進んだんだろう？」\nってなりませんか？' },
+      { min: -Infinity, art: 'calm', registerUrl: 'https://www.reservestock.jp/subscribe/NWNjMjQ0YWRlY', name: 'もうすぐ<wbr>整うタイプ',
+        hook: '惜しい。かなり惜しい。\n\nちゃんと休める日もある。\n「まあいっか」も言える。\nでも、なぜか波がある。' }
+    ],
+    intro: {
+      chips: ['無料', '1分', '5つの質問', '結果は3タイプ'],
+      // メインビジュアル風ヒーロー。文言は元LPのメインビジュアル画像のコピーそのまま。
+      // ページに本物のメインビジュアル画像がある時は自動で出さず、title だけのコンパクト表示になる
+      showHero: 'auto', // 'auto' | true | false
+      title: '心のゆとり診断テスト',
+      lede: '毎日ちゃんとやってるのに進んでない感じには、タイプがあるんです。1分で、自分に合った“余白の作り方”がわかります。',
+      voicesTitle: 'こんな心の声、ありませんか',
+      voices: [
+        '今日めっちゃ頑張ったのに、結局なに進んだんだっけ…？',
+        '休んでても「これでいいのか…？」ってソワソワ。',
+        '頼まれごとは全部引き受けて、自分のことは“また今度”。',
+        'ToDoは消えてるのに、達成感がない。'
+      ],
+      voicesNote: 'ひとつでも「あるある」と思ったら、この診断は私たち向けです。',
+      typesTitle: '結果は、この3タイプのどれか',
+      blurIndex: 1, // チラ見せで隠すタイプ（0始まり）
+      typesNote: 'どのタイプでしょう？ 結果には、そのタイプに合った「余白の作り方」がついています。',
+      giftTitle: '診断した人だけのプレゼント',
+      giftText: '「なんでこんなに忙しいのに進まないのか？」の正体と、自分に合った余白の作り方をまとめた冊子（完全無料）',
+      whoName: 'あまのさわ｜「ラク生き」サポーター',
+      whoText: '元・保健室の先生で、元・自分を押し殺す専門家。いまはサラッとわたしに戻る「ラク生き」を、糸島からオンラインでお伝えしています。',
+      avatarUrl: 'https://www.reservestock.jp/pictures/33421_iconimage.jpeg', // リザスト上のプロフィール画像。読めない環境ではユーカリのアイコンにフォールバック
+      cta: '1分で診断してみる →',
+      ctaNote: 'タイプはその場で表示。メール登録は最後に1回だけ。'
+    },
+    hint: '直感でOKです',
+    loadingText: 'タイプを診断中…',
+    resultLead: 'いまのわたしは…',
+    lockedTitle: '詳しい結果は、メールでお届けします',
+    lockedItems: [
+      'このタイプの「あるある」と、その理由',
+      '今すぐできること',
+      'プレゼント冊子「自分に合った余白の作り方」（完全無料）'
+    ],
+    arrowText: 'お名前とメールアドレスを入れて受け取る',
+    registerCta: '詳しい結果を無料で受け取る →',
+    registerNote: 'お名前とメールアドレスだけ。1分で終わります。',
+    submitLabel: '詳しい結果をメールで受け取る', // リザスト純正ボタンの文言を差し替え（空文字なら触らない）
+    hideNativeIntro: true, // リザストの告知文エリア（タイトル・見出し）を隠してアプリだけ見せる
+    fontsHref: 'https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap',
+    storageKey: 'yutori3202v2'
+  };
+
+
+  // ▼ アートワーク（オリジナルのインラインSVG。フラット×ローポリ風、配色は元LPに統一。グラデ・idは使わない＝複数回描画しても衝突しない）
+  var SVG_OPEN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" aria-hidden="true" focusable="false">';
+  var ART = {
+    // がんばりすぎて空回り：強い風の中で回り続ける風車
+    spin: SVG_OPEN +
+      '<rect width="200" height="150" fill="#e6f0fb"/><polygon points="0,0 200,0 200,52 130,34 70,64 0,44" fill="#d9e8f8"/>' +
+      '<path d="M8 40h38M150 28h40M20 78h26M160 84h30" stroke="#fff" stroke-width="3" stroke-linecap="round"/>' +
+      '<polygon points="0,150 0,112 46,96 92,118 92,150" fill="#8fd0d6"/><polygon points="46,96 92,118 92,150 60,150" fill="#6fbfc7"/>' +
+      '<polygon points="92,150 92,118 150,100 200,120 200,150" fill="#0097a7"/><polygon points="150,100 200,120 200,150 170,150" fill="#007f8d"/>' +
+      '<rect x="98.5" y="62" width="3" height="66" fill="#1f3b5b"/>' +
+      '<path d="M100 14a48 48 0 0 1 42 25M148 62a48 48 0 0 1-24 42M58 86a48 48 0 0 1-6-24" fill="none" stroke="#1e3f9e" stroke-width="2" stroke-dasharray="2 5" stroke-linecap="round" opacity=".55"/>' +
+      '<g><polygon points="100,62 100,26 126,40" fill="#1e3f9e"/><polygon points="100,62 126,40 116,62" fill="#3a5bb8"/></g>' +
+      '<g transform="rotate(90 100 62)"><polygon points="100,62 100,26 126,40" fill="#ffe27a"/><polygon points="100,62 126,40 116,62" fill="#f5cf4e"/></g>' +
+      '<g transform="rotate(180 100 62)"><polygon points="100,62 100,26 126,40" fill="#0097a7"/><polygon points="100,62 126,40 116,62" fill="#33b3c0"/></g>' +
+      '<g transform="rotate(270 100 62)"><polygon points="100,62 100,26 126,40" fill="#fff"/><polygon points="100,62 126,40 116,62" fill="#c8f3f5"/></g>' +
+      '<circle cx="100" cy="62" r="4" fill="#1f3b5b"/>' +
+      '<polygon points="30,58 40,54 36,63" fill="#b0d6ba"/><polygon points="168,52 178,50 173,59" fill="#b0d6ba"/><polygon points="146,70 153,66 151,74" fill="#ffe27a"/></svg>',
+    // なんとなく進んでない：凪の海で同じところを回っている小舟
+    drift: SVG_OPEN +
+      '<rect width="200" height="150" fill="#e9f1f8"/><polygon points="0,0 200,0 200,46 140,58 70,40 0,56" fill="#dde9f4"/>' +
+      '<polygon points="28,44 40,30 58,26 74,34 86,30 96,44" fill="#fff"/><polygon points="58,26 74,34 66,44 40,44" fill="#eef4fa"/>' +
+      '<polygon points="122,34 134,22 150,20 162,28 176,34" fill="#fff"/>' +
+      '<rect y="84" width="200" height="66" fill="#8fd0d6"/><polygon points="0,84 200,84 200,100 120,108 50,98 0,106" fill="#a9dde1"/>' +
+      '<polygon points="0,150 0,122 60,130 130,120 200,132 200,150" fill="#6fbfc7"/>' +
+      '<path d="M112 114c-30 14-66 8-62-8s40-16 58-4" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="1 6" stroke-linecap="round"/>' +
+      '<rect x="113" y="54" width="2.5" height="44" fill="#1f3b5b"/>' +
+      '<polygon points="117,58 117,94 137,94" fill="#fff"/><polygon points="117,58 117,94 126,94" fill="#ddfcfc"/><polygon points="112,64 112,94 98,94" fill="#ffe27a"/>' +
+      '<polygon points="92,98 138,98 130,110 100,110" fill="#1e3f9e"/><polygon points="92,98 108,98 100,110" fill="#3a5bb8"/>' +
+      '<path d="M140 116h20M84 124h14M120 126h26" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/></svg>',
+    // もうすぐ整う：朝日が昇る窓辺と、グラスのユーカリ（元LPのメインビジュアルのモチーフ）
+    calm: SVG_OPEN +
+      '<rect width="200" height="150" fill="#eef6fd"/><rect x="22" y="14" width="112" height="96" rx="4" fill="#fff"/><rect x="28" y="20" width="100" height="84" fill="#d6e6f7"/>' +
+      '<path d="M52 92a26 26 0 0 1 52 0z" fill="#ffe27a"/>' +
+      '<polygon points="28,104 28,84 56,70 84,90 84,104" fill="#8fd0d6"/><polygon points="56,70 84,90 84,104 68,104" fill="#6fbfc7"/>' +
+      '<polygon points="84,104 84,90 112,74 128,84 128,104" fill="#0097a7"/><polygon points="112,74 128,84 128,104 118,104" fill="#007f8d"/>' +
+      '<rect x="76.5" y="20" width="3" height="84" fill="#fff"/><rect x="28" y="58" width="100" height="3" fill="#fff"/>' +
+      '<rect y="118" width="200" height="32" fill="#c9dcef"/><polygon points="0,118 200,118 200,124 0,128" fill="#b9d0e8"/>' +
+      '<polygon points="34,122 86,122 90,132 30,132" fill="#1e3f9e"/><rect x="30" y="132" width="60" height="5" fill="#fff"/>' +
+      '<path d="M161 118C161 92 164 66 172 40" stroke="#006d79" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="172" cy="38" r="7" fill="#0097a7"/><circle cx="157" cy="54" r="8" fill="#6fbfc7"/><circle cx="178" cy="58" r="7" fill="#b0d6ba"/><circle cx="155" cy="74" r="7" fill="#0097a7"/><circle cx="174" cy="80" r="6" fill="#6fbfc7"/>' +
+      '<polygon points="146,88 176,88 172,124 150,124" fill="#c8f3f5" opacity=".8"/><polygon points="148,106 174,106 172,124 150,124" fill="#9adbe0" opacity=".85"/></svg>',
+    // チラ見せ用：霧の中の「？」
+    secret: SVG_OPEN +
+      '<rect width="200" height="150" fill="#e9f1f8"/><polygon points="0,0 200,0 200,60 120,44 60,72 0,52" fill="#dde9f4"/>' +
+      '<polygon points="0,150 0,110 50,96 100,116 150,98 200,112 200,150" fill="#c5dfe6"/><polygon points="0,150 0,128 70,120 140,132 200,124 200,150" fill="#a9d3dc"/>' +
+      '<text x="100" y="98" text-anchor="middle" font-family="\'Noto Serif JP\',serif" font-weight="700" font-size="76" fill="#1e3f9e" opacity=".8">?</text></svg>',
+    gift: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="14" y="10" width="36" height="46" rx="3" fill="#1e3f9e"/><rect x="14" y="10" width="7" height="46" fill="#3a5bb8"/><rect x="26" y="20" width="18" height="3" rx="1.5" fill="#fff"/><rect x="26" y="27" width="12" height="3" rx="1.5" fill="#9adbe0"/><polygon points="38,40 46,40 46,58 42,53 38,58" fill="#ffe27a"/><polygon points="54,4 56,10 62,12 56,14 54,20 52,14 46,12 52,10" fill="#ffe27a"/></svg>',
+    leaf: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 56C32 40 34 26 40 12" stroke="#006d79" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="40" cy="12" r="6" fill="#0097a7"/><circle cx="27" cy="24" r="7" fill="#6fbfc7"/><circle cx="43" cy="28" r="6" fill="#b0d6ba"/><circle cx="26" cy="41" r="6" fill="#0097a7"/><circle cx="40" cy="44" r="5" fill="#6fbfc7"/></svg>'
+  };
+
+  function ready(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  var form, app;
+  ready(function () {
+    try { init(); } catch (e) { teardown(); if (window.console) console.warn('[yutori-app] fallback to native form', e); }
+  });
+
+  function teardown() {
+    if (form) form.classList.remove('yt-on', 'yt-stage-register');
+    document.body.classList.remove('yt-immersive');
+    if (app && app.parentNode) app.parentNode.removeChild(app);
+  }
+
+  function init() {
+    if (document.getElementById('yutoriApp')) return;
+    var list = document.getElementById('fast_scoring_items');
+    var root = document.getElementById('yutori-root');
+    var standalone = !list;
+    if (standalone && !root) return;
+    form = standalone ? root : list.closest('form'); // form＝アプリの外枠（単体ページでは #yutori-root）
+    if (!form) return;
+
+    // 質問データ：単体ページは CONFIG から、埋め込みはネイティブのラジオを name ごとにまとめる
+    var questions = [], byName = {};
+    if (standalone) {
+      questions = CONFIG.questions.map(function (q) {
+        return { text: q.text, choices: q.choices.map(function (c) { return { radio: null, text: c }; }) };
+      });
+    }
+    Array.prototype.forEach.call(standalone ? [] : list.querySelectorAll('input[type=radio]'), function (r) {
+      var q = byName[r.name];
+      if (!q) {
+        var group = r.closest('.fast_choice_group') || list;
+        var dt = group.querySelector('dt');
+        q = byName[r.name] = { text: dt ? dt.textContent.trim() : '', choices: [] };
+        questions.push(q);
+      }
+      var label = r.closest('label');
+      q.choices.push({ radio: r, text: (label ? label.textContent : '').trim() });
+    });
+    var ok = questions.length === CONFIG.scores.length && questions.every(function (q, i) {
+      return q.text && q.choices.length === CONFIG.scores[i].length;
+    });
+    if (!ok) return; // 問数・択数が設定と合わない → 触らない
+
+    if (CONFIG.fontsHref && !document.querySelector('link[data-yt-fonts]')) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet'; link.href = CONFIG.fontsHref; link.setAttribute('data-yt-fonts', '');
+      document.head.appendChild(link);
+    }
+
+    var answers = restore(questions.length);
+    // リザストは回答1が初期チェック済みなので、未回答の誤送信を防ぐため一旦外す
+    questions.forEach(function (q, i) {
+      q.choices.forEach(function (c, j) { if (c.radio) c.radio.checked = answers[i] === j; });
+    });
+
+    app = document.createElement('div');
+    app.id = 'yutoriApp';
+    if (standalone) { root.innerHTML = ''; root.appendChild(app); } else list.parentNode.insertBefore(app, list);
+    form.classList.add('yt-on');
+    if (CONFIG.hideNativeIntro && !standalone) document.body.classList.add('yt-immersive');
+    if (CONFIG.submitLabel && !standalone) {
+      var a = form.querySelector('#button a.button');
+      if (a && !a.children.length) a.textContent = CONFIG.submitLabel;
+    }
+
+    var answered = answers.filter(function (a) { return a !== null; }).length;
+    if (answered === questions.length) showResult(false);
+    else if (answered > 0) showQuestion(answers.indexOf(null));
+    else showIntro();
+
+    function setRegister(on) { form.classList.toggle('yt-stage-register', on); }
+
+    function typeName(t, plain) { return plain ? t.name.replace(/<wbr>/g, '') : t.name; }
+
+    function showIntro() {
+      setRegister(false);
+      var I = CONFIG.intro;
+      var hasRealMv = !!document.querySelector('img[src*="header_images/fast_scorings"]');
+      var hero = I.showHero === true || (I.showHero === 'auto' && !hasRealMv);
+      var mv = hero
+        ? '<section class="yt-mv"><p class="yt-mv-copy"><span class="l1">「今日くらいは、</span>' +
+          '<span class="l2"><span class="yt-mk">まぁいいか</span>」<small>が</small></span>' +
+          '<span class="l3">なかなか言えない</span><span class="l4"><span class="yt-mk">あなたへ…</span></span></p>' +
+          '<p class="yt-mv-name">' + esc(I.title) + '</p>' +
+          '<div class="yt-mv-row"><div class="yt-mv-badge"><span>たった</span><b>1分</b><span>で完了！</span></div>' +
+          '<p class="yt-mv-sub">3つの「心のタイプ」で<br>もっと<span class="yt-mk">ラク</span>に生きる自分へ</p></div></section>'
+        : '';
+      app.innerHTML = '<div class="yt-screen">' + mv +
+        '<section class="yt-hero">' + (hero ? '' : '<h2 class="yt-title">' + esc(I.title) + '</h2>') + '<div class="yt-chips">' +
+        I.chips.map(function (c, i) { return '<span class="yt-chip' + (i === 0 ? ' is-free' : '') + '">' + esc(c) + '</span>'; }).join('') +
+        '</div><p class="yt-lede">' + esc(I.lede) + '</p></section>' +
+        '<section class="yt-voices"><p class="yt-sec">' + esc(I.voicesTitle) + '</p>' +
+        I.voices.map(function (v, i) { return '<div class="yt-bubble' + (i % 2 ? ' is-r' : '') + '">' + esc(v) + '</div>'; }).join('') +
+        '<p class="yt-note">' + esc(I.voicesNote) + '</p></section>' +
+        '<section><p class="yt-sec">' + esc(I.typesTitle) + '</p><div class="yt-types">' +
+        CONFIG.types.map(function (t, i) {
+          var blur = i === I.blurIndex;
+          return '<div class="yt-tcard' + (blur ? ' is-blur' : '') + '"><div class="yt-thumb">' + ART[blur ? 'secret' : t.art] + '</div><b>' +
+            (blur ? 'ひみつの<br>タイプ' : t.name.replace('<wbr>', '<br>')) + '</b></div>';
+        }).join('') +
+        '</div><p class="yt-types-note">' + esc(I.typesNote) + '</p></section>' +
+        '<section class="yt-gift"><div class="yt-gift-ico">' + ART.gift + '</div><div><b>' + esc(I.giftTitle) + '</b><span>' + esc(I.giftText) + '</span></div></section>' +
+        '<section class="yt-who"><div class="yt-avatar">' + ART.leaf + '</div><div><b>' + esc(I.whoName) + '</b><p>' + esc(I.whoText) + '</p></div></section>' +
+        '<div class="yt-cta"><button type="button" class="yt-btn" id="ytStart">' + esc(I.cta) + '</button><small>' + esc(I.ctaNote) + '</small></div>' +
+        '</div>';
+      if (I.avatarUrl) {
+        var img = new Image();
+        img.alt = 'あまのさわ';
+        img.onload = function () { var av = app.querySelector('.yt-avatar'); if (av) { av.textContent = ''; av.appendChild(img); } };
+        img.src = I.avatarUrl;
+      }
+      app.querySelector('#ytStart').addEventListener('click', function () { showQuestion(0); });
+    }
+
+    function showQuestion(i) {
+      setRegister(false);
+      var q = questions[i], total = questions.length, steps = '';
+      for (var s = 0; s < total; s++) steps += '<i class="' + (s < i ? 'is-done' : s === i ? 'is-now' : '') + '"></i>';
+      app.innerHTML = '<div class="yt-screen">' +
+        '<div class="yt-qbar"><button type="button" class="yt-back" aria-label="前に戻る">‹</button>' +
+        '<div class="yt-steps" aria-hidden="true">' + steps + '</div><span class="yt-count">' + (i + 1) + ' / ' + total + '</span></div>' +
+        '<div class="yt-qcard"><div class="yt-q"><span class="yt-qno">Q' + (i + 1) + '</span><p class="yt-qtext">' + esc(q.text) + '</p></div>' +
+        '<div class="yt-choices">' +
+        q.choices.map(function (c, j) {
+          return '<button type="button" class="yt-choice' + (answers[i] === j ? ' is-selected' : '') + '" data-j="' + j +
+            '"><span class="yt-dot"></span><span>' + esc(c.text) + '</span></button>';
+        }).join('') +
+        '</div></div><p class="yt-hint">' + esc(CONFIG.hint) + '</p></div>';
+
+      var locked = false;
+      Array.prototype.forEach.call(app.querySelectorAll('.yt-choice'), function (btn) {
+        btn.addEventListener('click', function () {
+          if (locked) return;
+          locked = true;
+          var j = +btn.getAttribute('data-j');
+          answers[i] = j;
+          save();
+          var radio = q.choices[j].radio;
+          if (radio) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          Array.prototype.forEach.call(app.querySelectorAll('.yt-choice'), function (b) { b.classList.remove('is-selected'); });
+          btn.classList.add('is-selected');
+          setTimeout(function () {
+            if (i + 1 < total) showQuestion(i + 1); else showResult(true);
+          }, 320);
+        });
+      });
+      app.querySelector('.yt-back').addEventListener('click', function () {
+        if (i > 0) showQuestion(i - 1); else showIntro();
+        scrollToApp();
+      });
+      scrollToApp();
+    }
+
+    function showResult(withLoading) {
+      if (withLoading) {
+        setRegister(false);
+        app.innerHTML = '<div class="yt-screen yt-loading"><div class="yt-breath">' + ART.leaf + '</div><p>' + esc(CONFIG.loadingText) + '</p></div>';
+        scrollToApp();
+        setTimeout(function () { showResult(false); }, 1400);
+        return;
+      }
+      var total = answers.reduce(function (sum, j, i) { return sum + CONFIG.scores[i][j]; }, 0);
+      var type = CONFIG.types.filter(function (t) { return total >= t.min; })[0];
+      var lock = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006d79" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+      app.innerHTML = '<div class="yt-screen">' +
+        '<section class="yt-result"><div class="yt-chips"><span class="yt-chip is-free">診断結果</span></div>' +
+        '<p class="yt-result-lead">' + esc(CONFIG.resultLead) + '</p>' +
+        '<div class="yt-art">' + ART[type.art] + '</div>' +
+        '<p class="yt-type" aria-label="' + esc(typeName(type, true)) + '"><span class="yt-mk">' + type.name + '</span></p>' +
+        '<div class="yt-bubble">' + esc(type.hook) + '</div></section>' +
+        '<section class="yt-locked"><p class="yt-sec">' + esc(CONFIG.lockedTitle) + '</p>' +
+        CONFIG.lockedItems.map(function (t) { return '<div class="yt-lock">' + lock + '<span>' + esc(t) + '</span></div>'; }).join('') +
+        '</section>' +
+        (standalone
+          ? '<div class="yt-cta is-static"><a class="yt-btn" href="' + esc(type.registerUrl) + '">' + esc(CONFIG.registerCta) + '</a><small>' + esc(CONFIG.registerNote) + '</small></div>'
+          : '<p class="yt-arrow">' + esc(CONFIG.arrowText) + '</p>') +
+        '<button type="button" class="yt-retry">もう一度診断する</button></div>';
+      setRegister(true);
+      app.querySelector('.yt-retry').addEventListener('click', function () {
+        answers = answers.map(function () { return null; });
+        save();
+        questions.forEach(function (q) { q.choices.forEach(function (c) { if (c.radio) c.radio.checked = false; }); });
+        showQuestion(0);
+      });
+      scrollToApp();
+    }
+
+    function scrollToApp() {
+      var rect = form.getBoundingClientRect();
+      if (rect.top < 0 || rect.top > 140) {
+        var top = rect.top + window.pageYOffset - 80; // 固定ヘッダー分
+        try { window.scrollTo({ top: top, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, top); }
+      }
+    }
+
+    function save() {
+      try { sessionStorage.setItem(CONFIG.storageKey, JSON.stringify(answers)); } catch (e) {}
+    }
+  }
+
+  // 送信エラーでページが再表示された時に結果画面へ戻すための復元
+  function restore(n) {
+    var empty = []; for (var i = 0; i < n; i++) empty.push(null);
+    try {
+      var a = JSON.parse(sessionStorage.getItem(CONFIG.storageKey) || 'null');
+      if (Array.isArray(a) && a.length === n && a.every(function (v, i) {
+        return v === null || (typeof v === 'number' && v >= 0 && v < CONFIG.scores[i].length);
+      })) return a;
+    } catch (e) {}
+    return empty;
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+})();
+</script>
+</body>
+</html>
