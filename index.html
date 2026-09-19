@@ -81,7 +81,7 @@ body.yt-immersive .freetextSec { display: none !important; }
   background: #fff; color: var(--teal-deep); border: 1px solid #b9e3e8; }
 #yutoriApp .yt-chip.is-free { background: var(--teal); color: #fff; border-color: var(--teal); font-weight: 700; }
 #yutoriApp .yt-bubble { background: var(--aqua); border-radius: 18px 18px 18px 4px; padding: 10px 14px;
-  font-size: 14.5px; line-height: 1.7; width: fit-content; max-width: 92%; }
+  font-size: 14.5px; line-height: 1.7; width: fit-content; max-width: 92%; white-space: pre-line; }
 #yutoriApp .yt-bubble.is-r { align-self: flex-end; border-radius: 18px 18px 4px 18px; background: var(--sel-bg); }
 #yutoriApp .yt-thumb svg, #yutoriApp .yt-art svg, #yutoriApp .yt-gift-ico svg { display: block; width: 100%; height: 100%; }
 #yutoriApp .yt-thumb { width: 100%; aspect-ratio: 4 / 3; border-radius: 9px; overflow: hidden; }
@@ -128,7 +128,7 @@ body.yt-immersive .freetextSec { display: none !important; }
   text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(31, 59, 91, .06); }
 #yutoriApp .yt-tcard b { font-size: 12px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 #yutoriApp .yt-tcard.is-blur b { color: transparent; text-shadow: 0 0 7px rgba(31, 59, 91, .55); }
-#yutoriApp .yt-types-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; }
+#yutoriApp .yt-types-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; white-space: pre-line; }
 #yutoriApp .yt-gift { display: flex; gap: 12px; align-items: flex-start; border: 1.5px dashed var(--teal); border-radius: 12px;
   padding: 12px 14px; background: #f7fdfe; }
 #yutoriApp .yt-gift-ico { width: 46px; height: 46px; flex: none; }
@@ -197,6 +197,7 @@ body.yt-immersive .freetextSec { display: none !important; }
 #yutoriApp .yt-lock { display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px; font-size: 14px; line-height: 1.65;
   background: #f7fdfe; border: 1px solid #d3eef1; border-radius: 12px; }
 #yutoriApp .yt-lock svg { flex: none; margin-top: 4px; }
+#yutoriApp .yt-lock span { white-space: pre-line; }
 #yutoriApp .yt-arrow { text-align: center; font-weight: 700; font-size: 14px; color: var(--teal-deep); }
 #yutoriApp .yt-arrow::after { content: ""; display: block; width: 9px; height: 9px; margin: 6px auto 0;
   border-right: 2.5px solid var(--teal); border-bottom: 2.5px solid var(--teal); transform: rotate(45deg); animation: ytBob 1.4s ease-in-out infinite; }
@@ -234,7 +235,7 @@ body.yt-immersive .freetextSec { display: none !important; }
 <div class="site-noscript"><strong>心のゆとり診断テスト</strong><br>この診断は JavaScript を使います。うまく表示されない場合は、<a href="https://www.reservestock.jp/page/fast_scoring/3202">こちらの診断ページ</a>からお試しください。</div>
 </div>
 </main>
-<footer class="site-foot">あまのさわ｜「ラク生き」サポーター</footer>
+<footer class="site-foot">あまのさわ｜「ラク生き」創始者</footer>
 <script>
 /* ===== 心のゆとり診断 アプリ版（元LPの見た目に寄せた版） =====
    2つのモードで動く：
@@ -281,18 +282,18 @@ body.yt-immersive .freetextSec { display: none !important; }
       voicesTitle: 'こんな心の声、ありませんか',
       // さわさん本人の修正（2026-09-17 LINE）。順番もこのとおり
       voices: [
-        '休んでても「あれもこれもやらなきゃ」と頭が忙しく、ソワソワ。結局、疲れたまま。',
-        '1日中、忙しかった気がするけど、夜になると、何にも終わってない気がする。',
-        '頼まれごとは“つい”引き受けて、自分のことは“また後で”。',
-        '目の前にやることがあると、つい「やらなきゃ」と思って、動き続けちゃう…ほんとは休みたいのに💦'
+        '休んでても「あれもこれもやらなきゃ」と頭が忙しく、ソワソワ。\n結局、疲れたまま。',
+        '1日中、忙しかった気がするけど、\n夜になると、何にも終わってない気がする。',
+        '頼まれごとは“つい”引き受けて、\n自分のことは“また後で”。',
+        '目の前にやることがあると、\nつい「やらなきゃ」と思って、動き続けちゃう…\nほんとは休みたいのに💦'
       ],
-      voicesNote: 'ひとつでも「あるある」と思ったら、この診断は私たち向けです。',
+      voicesNote: 'ひとつでも「あるある」と思ったらこの診断はあなたにピッタリ！', // さわさん指示 2026-09-19
       typesTitle: '結果は、この3タイプのどれか',
       blurIndex: 1, // チラ見せで隠すタイプ（0始まり）
-      typesNote: 'どのタイプでしょう？ 結果には、そのタイプに合った「余白の作り方」がついています。',
+      typesNote: 'どのタイプでしょう？\n結果には、そのタイプに合った「余白の作り方」がついています。',
       giftTitle: '診断した人だけのプレゼント',
-      giftText: '忙しい、いつもなんか焦ってる、疲れが取れない…\nなのに1日の終わりには「今日も何も終わってない」気がする💦\n実はそれ、あなたに合わない“やり方”をしてるからかも。\nその理由と、あなたにピッタリの「心からホッと休める余白のつくり方」をプレゼント♡', // さわさん指示 2026-09-19（“やり方”は“頑張り方”に差し替え可）
-      whoName: 'あまのさわ｜「ラク生き」サポーター',
+      giftText: '忙しい、いつもなんか焦ってる、疲れが取れない…\n\nなのに1日の終わりには「今日も何も終わってない」気がする💦\n\n実はそれ、あなたに合わない“やり方”をしてるからかも。\n\nその理由と、あなたにピッタリの「心からホッと休める余白のつくり方」をプレゼント♡', // さわさん指示 2026-09-19（“やり方”は“頑張り方”に差し替え可）
+      whoName: 'あまのさわ｜「ラク生き」創始者', // さわさん指示 2026-09-19
       whoText: '「頑張る」で人生を切り抜けてきた方たちへ。\n自分を活かして、自然体で楽しく生きる「ラク生き」を、糸島🏝️からオンラインでお伝えしています。', // さわさん指示 2026-09-19
       avatarUrl: 'https://www.reservestock.jp/pictures/33421_iconimage.jpeg', // リザスト上のプロフィール画像。読めない環境ではユーカリのアイコンにフォールバック
       cta: '1分で診断してみる →',
@@ -304,8 +305,8 @@ body.yt-immersive .freetextSec { display: none !important; }
     lockedTitle: '詳しい結果は、メールでお届けします',
     lockedItems: [
       '「だから疲れるのか！」あなたが知らずにやってる無意識のクセとは⁉️',
-      '「これ、私じゃん🤣」あなた専用の“わたしの取扱説明書”',
-      'もうムダに頑張らない！あなたに合った「余白の作り方」完全ガイド（完全無料）'
+      '「これ、私じゃん🤣」あなた専用の\n“わたしの取扱説明書”',
+      'もうムダに頑張らない！\nあなたに合った「余白の作り方」完全ガイド\n（完全無料）'
     ],
     arrowText: 'お名前とメールアドレスを入れて受け取る',
     registerCta: '詳しい結果を無料で受け取る →',
