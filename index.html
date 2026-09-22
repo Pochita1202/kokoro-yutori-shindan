@@ -83,8 +83,15 @@ body.yt-immersive .freetextSec { display: none !important; }
 #yutoriApp .yt-bubble { background: var(--aqua); border-radius: 18px 18px 18px 4px; padding: 10px 14px;
   font-size: 14.5px; line-height: 1.7; width: fit-content; max-width: 92%; white-space: pre-line; }
 #yutoriApp .yt-bubble.is-r { align-self: flex-end; border-radius: 18px 18px 4px 18px; background: var(--sel-bg); }
-#yutoriApp .yt-thumb svg, #yutoriApp .yt-thumb img, #yutoriApp .yt-art img, #yutoriApp .yt-gift-ico svg { display: block; width: 100%; height: 100%; object-fit: cover; }
-#yutoriApp .yt-thumb { width: 100%; aspect-ratio: 1 / 1; border-radius: 9px; overflow: hidden; background: #eef4fa; }
+#yutoriApp .yt-art img, #yutoriApp .yt-gift-ico svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* 入り口カードの丸窓：イラストの一部（顔まわり）をチラ見せ。固定サイズ＋背景画像＝古いブラウザでも崩れない */
+#yutoriApp .yt-thumb { position: relative; width: 78px; height: 78px; border-radius: 50%; overflow: hidden; margin-top: 4px;
+  background: #fff; border: 3px solid #fff; box-shadow: 0 3px 10px rgba(31, 59, 91, .14); }
+#yutoriApp .yt-thumb-img { position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  background-repeat: no-repeat; background-size: 250% auto; background-color: var(--type-bg, #eef4fa); }
+#yutoriApp .is-blur .yt-thumb-img { filter: blur(4px); transform: scale(1.15); opacity: .85; }
+#yutoriApp .yt-thumb-q { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-weight: 700; font-size: 34px; line-height: 1; color: var(--navy); text-shadow: 0 0 10px #fff, 0 0 4px #fff; }
 /* 結果のイラスト：カードの端まで画面いっぱいに（正方形・枠なし）。周りの背景はイラストの地色（--type-bg）に合わせて一体化 */
 #yutoriApp .yt-art { width: calc(100% + 44px); margin: 2px -22px 0; aspect-ratio: 1 / 1; background: var(--type-bg, #f3f9fe); }
 #yutoriApp .yt-btn { display: block; width: 100%; text-align: center; text-decoration: none; border: 0; border-radius: 50px; padding: 16px 18px;
@@ -124,7 +131,7 @@ body.yt-immersive .freetextSec { display: none !important; }
 #yutoriApp .yt-voices .yt-sec { margin-bottom: 4px; }
 #yutoriApp .yt-note { font-size: 13.5px; margin-top: 6px; }
 #yutoriApp .yt-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-#yutoriApp .yt-tcard { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 5px 5px 10px;
+#yutoriApp .yt-tcard { background: var(--type-bg, #fff); border: 1px solid rgba(255, 255, 255, .9); border-radius: 12px; padding: 8px 5px 10px;
   text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(31, 59, 91, .06); }
 #yutoriApp .yt-tcard b { font-size: 12px; line-height: 1.45; font-weight: 700; color: var(--ink); }
 #yutoriApp .yt-tcard.is-blur b { color: transparent; text-shadow: 0 0 7px rgba(31, 59, 91, .55); }
@@ -263,13 +270,13 @@ body.yt-immersive .freetextSec { display: none !important; }
       { text: '「ちゃんとやらなきゃ」と思った瞬間', choices: ['全部ちゃんとやろうとして詰む', 'ほどほどでOKにできる', '考えすぎて動けなくなる'] }
     ],
     // 合計が min 点以上で判定（上から順）。registerUrl はタイプ別リザスト登録ページ（多目的ページ 162335/162336/162338。申込完了メール＝詳しい結果の1通だけ届く）。hook は結果メール冒頭（さわさん本人の文）から引用。
-    // img はタイプ別イラスト（さわさん提供 2026-09-22。site/img/ に配置、imgBase と結合）。nick はイラスト内の愛称（表示はイラスト側。alt に使う）。bg はイラストの地色（結果画面の背景をこれに合わせて画像と一体化）
+    // img はタイプ別イラスト（さわさん提供 2026-09-22。site/img/ に配置、imgBase と結合）。nick はイラスト内の愛称（表示はイラスト側。alt に使う）。bg はイラストの地色（結果画面の背景と入り口カードの色に使う）。peek は入り口カードの丸窓に写す位置（顔まわり・background-position 値）
     types: [
-      { min: 100, art: 'spin', img: 'type-spin-senju.webp', nick: '千手観音さん', bg: '#fdeff1', registerUrl: 'https://www.reservestock.jp/inquiry/OGU1MTBhNTdlN', name: 'がんばりすぎて<wbr>空回りタイプ',
+      { min: 100, art: 'spin', img: 'type-spin-senju.webp', nick: '千手観音さん', bg: '#fdeff1', peek: '48% 36%', registerUrl: 'https://www.reservestock.jp/inquiry/OGU1MTBhNTdlN', name: 'がんばりすぎて<wbr>空回りタイプ',
         hook: '「今日めっちゃ頑張ったのに、\n結局なに進んだんだっけ…？」\n\n↑これ、週3で思ってません？' },
-      { min: 85, art: 'drift', img: 'type-drift-mawashiguruma.webp', nick: '回し車さん', bg: '#e8f7fd', registerUrl: 'https://www.reservestock.jp/inquiry/N2Q2ZWMyOGY1Y', name: 'なんとなく<wbr>進んでないタイプ',
+      { min: 85, art: 'drift', img: 'type-drift-mawashiguruma.webp', nick: '回し車さん', bg: '#e8f7fd', peek: '52% 40%', registerUrl: 'https://www.reservestock.jp/inquiry/N2Q2ZWMyOGY1Y', name: 'なんとなく<wbr>進んでないタイプ',
         hook: 'やることはやってる。ちゃんと生きてる。\n\nでも、「で、私は何が進んだんだろう？」\nってなりませんか？' },
-      { min: -Infinity, art: 'calm', img: 'type-calm-jetcoaster.webp', nick: 'ジェットコースターさん', bg: '#e1fafa', registerUrl: 'https://www.reservestock.jp/inquiry/NjUzODJkNTY2N', name: 'もうすぐ<wbr>整うタイプ',
+      { min: -Infinity, art: 'calm', img: 'type-calm-jetcoaster.webp', nick: 'ジェットコースターさん', bg: '#e1fafa', peek: '51% 46%', registerUrl: 'https://www.reservestock.jp/inquiry/NjUzODJkNTY2N', name: 'もうすぐ<wbr>整うタイプ',
         hook: '惜しい。かなり惜しい。\n\nちゃんと休める日もある。\n「まあいっか」も言える。\nでも、なぜか波がある。' }
     ],
     intro: {
@@ -320,18 +327,16 @@ body.yt-immersive .freetextSec { display: none !important; }
 
 
   // ▼ アートワーク。タイプ別イラストは画像（CONFIG.types[].img）。以下は小物のインラインSVG（グラデ・idは使わない＝複数回描画しても衝突しない）
-  //    旧タイプ別SVG（風車・小舟・窓辺のユーカリ）は src/legacy-art-svg.txt に退避
-  var SVG_OPEN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">';
+  //    旧タイプ別SVG（風車・小舟・窓辺のユーカリ・「？」）は src/legacy-art-svg.txt に退避
   var ART = {
-    // チラ見せ用：霧の中の「？」
-    secret: SVG_OPEN +
-      '<rect width="200" height="150" fill="#e9f1f8"/><polygon points="0,0 200,0 200,60 120,44 60,72 0,52" fill="#dde9f4"/>' +
-      '<polygon points="0,150 0,110 50,96 100,116 150,98 200,112 200,150" fill="#c5dfe6"/><polygon points="0,150 0,128 70,120 140,132 200,124 200,150" fill="#a9d3dc"/>' +
-      '<text x="100" y="98" text-anchor="middle" font-family="\'Noto Serif JP\',serif" font-weight="700" font-size="76" fill="#1e3f9e" opacity=".8">?</text></svg>',
     gift: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="14" y="10" width="36" height="46" rx="3" fill="#1e3f9e"/><rect x="14" y="10" width="7" height="46" fill="#3a5bb8"/><rect x="26" y="20" width="18" height="3" rx="1.5" fill="#fff"/><rect x="26" y="27" width="12" height="3" rx="1.5" fill="#9adbe0"/><polygon points="38,40 46,40 46,58 42,53 38,58" fill="#ffe27a"/><polygon points="54,4 56,10 62,12 56,14 54,20 52,14 46,12 52,10" fill="#ffe27a"/></svg>',
     leaf: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 56C32 40 34 26 40 12" stroke="#006d79" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="40" cy="12" r="6" fill="#0097a7"/><circle cx="27" cy="24" r="7" fill="#6fbfc7"/><circle cx="43" cy="28" r="6" fill="#b0d6ba"/><circle cx="26" cy="41" r="6" fill="#0097a7"/><circle cx="40" cy="44" r="5" fill="#6fbfc7"/></svg>'
   };
 
+  function typeThumb(t, blur) { // 入り口カードの丸窓。イラストの一部（顔まわり）をチラ見せ。blur＝ひみつのタイプ
+    return '<div class="yt-thumb"><div class="yt-thumb-img" style="background-image:url(' + esc(CONFIG.imgBase + t.img) + ');background-position:' + esc(t.peek) + '"></div>' +
+      (blur ? '<span class="yt-thumb-q" aria-hidden="true">?</span>' : '') + '</div>';
+  }
   function typeImg(t) {
     return '<img src="' + esc(CONFIG.imgBase + t.img) + '" alt="' + esc(t.name.replace(/<wbr>/g, '') + '（' + t.nick + '）') +
       '" width="900" height="900" decoding="async">';
@@ -444,7 +449,7 @@ body.yt-immersive .freetextSec { display: none !important; }
         '<section><p class="yt-sec">' + esc(I.typesTitle) + '</p><div class="yt-types">' +
         CONFIG.types.map(function (t, i) {
           var blur = i === I.blurIndex;
-          return '<div class="yt-tcard' + (blur ? ' is-blur' : '') + '"><div class="yt-thumb">' + (blur ? ART.secret : typeImg(t)) + '</div><b>' +
+          return '<div class="yt-tcard' + (blur ? ' is-blur' : '') + '" style="--type-bg:' + esc(t.bg) + '">' + typeThumb(t, blur) + '<b>' +
             (blur ? 'ひみつの<br>タイプ' : t.name.replace('<wbr>', '<br>')) + '</b></div>';
         }).join('') +
         '</div><p class="yt-types-note">' + esc(I.typesNote) + '</p></section>' +
@@ -458,6 +463,7 @@ body.yt-immersive .freetextSec { display: none !important; }
         img.onload = function () { var av = app.querySelector('.yt-avatar'); if (av) { av.textContent = ''; av.appendChild(img); } };
         img.src = I.avatarUrl;
       }
+      preloadArt();
       app.querySelector('#ytStart').addEventListener('click', function () { showQuestion(0); });
     }
 
