@@ -19,7 +19,7 @@
 <meta name="theme-color" content="#0097a7">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&family=Yusei+Magic&display=swap">
 <style>
 html,body{margin:0;padding:0}
 body{background:linear-gradient(180deg,#e9f3fb 0,#f6fbfe 320px,#fff 100%);color:#1f3b5b;font-family:"M PLUS 1","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
@@ -49,6 +49,7 @@ body{background:linear-gradient(180deg,#e9f3fb 0,#f6fbfe 320px,#fff 100%);color:
   --marker: #ffe27a;      /* メインビジュアルの黄色マーカー */
   --serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --sans: "M PLUS 1", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  --hand: "Yusei Magic", "Noto Serif JP", "Hiragino Mincho ProN", serif; /* 手書き風（カードの愛称） */
 
   display: block; box-sizing: border-box; width: 100%; max-width: 430px; margin: 0 auto 40px;
   padding: 22px 22px 30px; background: var(--paper); color: var(--ink);
@@ -133,7 +134,7 @@ body.yt-immersive .freetextSec { display: none !important; }
 #yutoriApp .yt-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 #yutoriApp .yt-tcard { background: var(--type-bg, #fff); border: 1px solid rgba(255, 255, 255, .9); border-radius: 12px; padding: 8px 3px 10px;
   text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(31, 59, 91, .06); }
-#yutoriApp .yt-tcard b { font-family: var(--serif); font-size: 13px; line-height: 1.35; font-weight: 700; color: var(--navy); letter-spacing: 0; white-space: nowrap; }
+#yutoriApp .yt-tcard b { font-family: var(--hand); font-size: 15px; line-height: 1.3; font-weight: 400; color: var(--navy); letter-spacing: 0; white-space: nowrap; margin-top: 2px; }
 #yutoriApp .yt-tcard small { display: block; margin-top: -4px; font-size: 10.5px; line-height: 1.4; color: var(--ink-soft); }
 #yutoriApp .yt-tcard.is-blur b, #yutoriApp .yt-tcard.is-blur small { color: transparent; text-shadow: 0 0 7px rgba(31, 59, 91, .55); }
 #yutoriApp .yt-types-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; white-space: pre-line; }
@@ -307,6 +308,7 @@ body.yt-immersive .freetextSec { display: none !important; }
       voicesNote: 'ひとつでも「あるある」と思ったらこの診断はあなたにピッタリ！', // さわさん指示 2026-09-19
       typesTitle: '結果は、この3タイプのどれか',
       blurIndex: 1, // チラ見せで隠すタイプ（0始まり）
+      showTypeNameOnCards: false, // カードの愛称の下にタイプ名（がんばりすぎて空回りタイプ等）を出すか。さわさん判断で非表示（2026-09-22）
       typesNote: 'どのタイプでしょう？\n結果には、そのタイプに合った「余白の作り方」がついています。',
       giftTitle: '診断した人だけのプレゼント',
       giftText: '忙しい、いつもなんか焦ってる、疲れが取れない…\n\nなのに1日の終わりには「今日も何も終わってない」気がする💦\n\n実はそれ❗️\nあなたに合わない“頑張り方”をしてるかも⁉️\n\nその理由と、あなたにピッタリの「心からホッと休める余白のつくり方」をプレゼント♡', // さわさん指示 2026-09-19 → 2026-09-22 「実はそれ❗️／頑張り方／⁉️」に修正（本人指示）
@@ -332,7 +334,7 @@ body.yt-immersive .freetextSec { display: none !important; }
     registerNote: 'お名前とメールアドレスだけ。1分で終わります。',
     submitLabel: '詳しい結果をメールで受け取る', // リザスト純正ボタンの文言を差し替え（空文字なら触らない）
     hideNativeIntro: true, // リザストの告知文エリア（タイトル・見出し）を隠してアプリだけ見せる
-    fontsHref: 'https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap',
+    fontsHref: 'https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&family=Yusei+Magic&display=swap', // Yusei Magic＝カードの愛称用の手書き風（さわさん希望 2026-09-22）
     imgBase: 'img/', // タイプ別イラストの置き場。本番は site/img/（相対）。プレビュー・埋め込み用は build.py が本番URLの絶対パスに差し替える
     storageKey: 'yutori3202v2'
   };
@@ -463,7 +465,7 @@ body.yt-immersive .freetextSec { display: none !important; }
           var blur = i === I.blurIndex;
           return '<div class="yt-tcard' + (blur ? ' is-blur' : '') + '" style="--type-bg:' + esc(t.bg) + '">' + typeThumb(t, blur) +
             '<b>' + (blur ? '？？？さん' : t.nick.replace('<wbr>', '<br>')) + '</b>' +
-            '<small>' + (blur ? 'ひみつのタイプ' : t.name.replace('<wbr>', '<br>')) + '</small></div>';
+            (I.showTypeNameOnCards ? '<small>' + (blur ? 'ひみつのタイプ' : t.name.replace('<wbr>', '<br>')) + '</small>' : '') + '</div>';
         }).join('') +
         '</div><p class="yt-types-note">' + esc(I.typesNote) + '</p></section>' +
         '<section class="yt-gift"><div class="yt-gift-ico">' + ART.gift + '</div><div><b>' + esc(I.giftTitle) + '</b><span>' + esc(I.giftText) + '</span></div></section>' +
