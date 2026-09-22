@@ -9,7 +9,7 @@
 <meta property="og:title" content="心のゆとり診断テスト｜あまのさわ">
 <meta property="og:description" content="5問・1分。「今日くらいは、まぁいいか」がなかなか言えない人のための、心のゆとりタイプ診断。自分に合った余白の作り方がわかります。">
 <meta property="og:url" content="https://pochita1202.github.io/kokoro-yutori-shindan/">
-<meta property="og:image" content="https://pochita1202.github.io/kokoro-yutori-shindan/ogp.png">
+<meta property="og:image" content="https://pochita1202.github.io/kokoro-yutori-shindan/ogp.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="あまのさわ">
@@ -285,11 +285,11 @@ body.yt-immersive .freetextSec { display: none !important; }
     // 合計が min 点以上で判定（上から順）。registerUrl はタイプ別リザスト登録ページ（多目的ページ 162335/162336/162338。申込完了メール＝詳しい結果の1通だけ届く）。hook は結果メール冒頭（さわさん本人の文）から引用。
     // img はタイプ別イラスト（さわさん提供 2026-09-22。site/img/ に配置、imgBase と結合）。nick はイラスト内の愛称（入り口カードに表示＝さわさん希望 2026-09-22。<wbr> はカードでの改行位置。結果画面はイラスト内の文字に任せ alt にのみ使う）。bg はイラストの地色（結果画面の背景と入り口カードの色に使う）。peek は入り口カードの丸窓に写す位置（顔まわり・background-position 値）
     types: [
-      { min: 100, art: 'spin', img: 'type-spin-senju.webp', nick: '千手観音さん', bg: '#fdeff1', peek: '48% 36%', registerUrl: 'https://www.reservestock.jp/inquiry/OGU1MTBhNTdlN', name: 'がんばりすぎて<wbr>空回りタイプ',
+      { min: 100, art: 'spin', img: 'type-spin-senju.webp', nick: '千手観音さん', bg: '#fdeff1', peek: '48% 36%', track: { threads: '899ab82a0b1d7f5f' }, registerUrl: 'https://www.reservestock.jp/inquiry/OGU1MTBhNTdlN', name: 'がんばりすぎて<wbr>空回りタイプ',
         hook: '「今日めっちゃ頑張ったのに、\n結局なに進んだんだっけ…？」\n\n↑これ、週3で思ってません？' },
-      { min: 85, art: 'drift', img: 'type-drift-mawashiguruma.webp', nick: '回し車さん', bg: '#e8f7fd', peek: '52% 40%', registerUrl: 'https://www.reservestock.jp/inquiry/N2Q2ZWMyOGY1Y', name: 'なんとなく<wbr>進んでないタイプ',
+      { min: 85, art: 'drift', img: 'type-drift-mawashiguruma.webp', nick: '回し車さん', bg: '#e8f7fd', peek: '52% 40%', track: { threads: 'f131eb22b66fdfab' }, registerUrl: 'https://www.reservestock.jp/inquiry/N2Q2ZWMyOGY1Y', name: 'なんとなく<wbr>進んでないタイプ',
         hook: 'やることはやってる。ちゃんと生きてる。\n\nでも、「で、私は何が進んだんだろう？」\nってなりませんか？' },
-      { min: -Infinity, art: 'calm', img: 'type-calm-jetcoaster.webp', nick: 'ジェット<wbr>コースターさん', bg: '#e1fafa', peek: '51% 46%', registerUrl: 'https://www.reservestock.jp/inquiry/NjUzODJkNTY2N', name: 'もうすぐ<wbr>整うタイプ',
+      { min: -Infinity, art: 'calm', img: 'type-calm-jetcoaster.webp', nick: 'ジェット<wbr>コースターさん', bg: '#e1fafa', peek: '51% 46%', track: { threads: '12e6a16f4e812d99' }, registerUrl: 'https://www.reservestock.jp/inquiry/NjUzODJkNTY2N', name: 'もうすぐ<wbr>整うタイプ',
         hook: '惜しい。かなり惜しい。\n\nちゃんと休める日もある。\n「まあいっか」も言える。\nでも、なぜか波がある。' }
     ],
     intro: {
@@ -339,6 +339,11 @@ body.yt-immersive .freetextSec { display: none !important; }
     submitLabel: '詳しい結果をメールで受け取る', // リザスト純正ボタンの文言を差し替え（空文字なら触らない）
     hideNativeIntro: true, // リザストの告知文エリア（タイトル・見出し）を隠してアプリだけ見せる
     fontsHref: 'https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&family=Yusei+Magic&display=swap', // Yusei Magic＝カードの愛称用の手書き風（さわさん希望 2026-09-22）
+    // ▼ 計測：アプリのURLの ?src=threads を保持し、結果画面の登録ボタンのURLに、そのタイプの登録ページ用 trackid を付ける
+    //    リザストの「流入元別リンク」はフォーム（登録ページ）ごとに発行される → 各 type の track: { threads: '…' } に持つ
+    //    （リザスト管理画面：多目的ページ → 各フォーム → アクセス解析 → 流入元別リンク「診断アプリ_Threads」 2026-09-22発行）
+    //    Facebook など流入元を増やす時は、3フォームそれぞれで「診断アプリ_Facebook」を発行し track.facebook に入れて ?src=facebook で配る
+    //    ?trackid=XXXX を直接付けた場合はそのまま登録URLに引き継ぐ（1フォーム分のテスト用）
     imgBase: 'img/', // タイプ別イラストの置き場。本番は site/img/（相対）。プレビュー・埋め込み用は build.py が本番URLの絶対パスに差し替える
     storageKey: 'yutori3202v2'
   };
@@ -350,6 +355,30 @@ body.yt-immersive .freetextSec { display: none !important; }
     gift: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="14" y="10" width="36" height="46" rx="3" fill="#1e3f9e"/><rect x="14" y="10" width="7" height="46" fill="#3a5bb8"/><rect x="26" y="20" width="18" height="3" rx="1.5" fill="#fff"/><rect x="26" y="27" width="12" height="3" rx="1.5" fill="#9adbe0"/><polygon points="38,40 46,40 46,58 42,53 38,58" fill="#ffe27a"/><polygon points="54,4 56,10 62,12 56,14 54,20 52,14 46,12 52,10" fill="#ffe27a"/></svg>',
     leaf: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 56C32 40 34 26 40 12" stroke="#006d79" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="40" cy="12" r="6" fill="#0097a7"/><circle cx="27" cy="24" r="7" fill="#6fbfc7"/><circle cx="43" cy="28" r="6" fill="#b0d6ba"/><circle cx="26" cy="41" r="6" fill="#0097a7"/><circle cx="40" cy="44" r="5" fill="#6fbfc7"/></svg>'
   };
+
+  // 計測用：URLの ?src=threads / ?trackid=… を拾って sessionStorage に保持（英数字・-・_ のみ許可）
+  function readTrack() {
+    var q = {};
+    try {
+      String(location.search).replace(/^\?/, '').split('&').forEach(function (kv) {
+        var i = kv.indexOf('='), k = i < 0 ? kv : kv.slice(0, i), v = i < 0 ? '' : kv.slice(i + 1);
+        if (k) q[decodeURIComponent(k)] = decodeURIComponent(v.replace(/\+/g, ' '));
+      });
+    } catch (e) {}
+    var ok = /^[A-Za-z0-9_-]{1,64}$/;
+    var t = { src: ok.test(q.src || '') ? q.src : '', trackid: ok.test(q.trackid || '') ? q.trackid : '' };
+    var key = CONFIG.storageKey + ':track';
+    try {
+      if (t.src || t.trackid) sessionStorage.setItem(key, JSON.stringify(t));
+      else t = JSON.parse(sessionStorage.getItem(key) || 'null') || t;
+    } catch (e) {}
+    return t;
+  }
+  function withTrackId(type, url) {
+    var t = readTrack();
+    var id = t.trackid || (t.src && type.track && type.track[t.src]) || '';
+    return id ? url + (url.indexOf('?') >= 0 ? '&' : '?') + 'trackid=' + encodeURIComponent(id) : url;
+  }
 
   function typeThumb(t, blur) { // 入り口カードの丸窓。イラストの一部（顔まわり）をチラ見せ。blur＝ひみつのタイプ
     return '<div class="yt-thumb"><div class="yt-thumb-img" style="background-image:url(' + esc(CONFIG.imgBase + t.img) + ');background-position:' + esc(t.peek) + '"></div>' +
@@ -485,6 +514,7 @@ body.yt-immersive .freetextSec { display: none !important; }
         img.src = I.avatarUrl;
       }
       preloadArt();
+      readTrack();
       app.querySelector('#ytStart').addEventListener('click', function () { showQuestion(0); });
     }
 
@@ -552,7 +582,7 @@ body.yt-immersive .freetextSec { display: none !important; }
         CONFIG.lockedItems.map(function (t) { return '<div class="yt-lock">' + lock + '<span>' + esc(t) + '</span></div>'; }).join('') +
         '</section>' +
         (standalone
-          ? '<div class="yt-cta is-static"><a class="yt-btn" href="' + esc(type.registerUrl) + '">' + esc(CONFIG.registerCta) + '</a><small>' + esc(CONFIG.registerNote) + '</small></div>'
+          ? '<div class="yt-cta is-static"><a class="yt-btn" href="' + esc(withTrackId(type, type.registerUrl)) + '">' + esc(CONFIG.registerCta) + '</a><small>' + esc(CONFIG.registerNote) + '</small></div>'
           : '<p class="yt-arrow">' + esc(CONFIG.arrowText) + '</p>') +
         '<button type="button" class="yt-retry">もう一度診断する</button></div>';
       setRegister(true);
