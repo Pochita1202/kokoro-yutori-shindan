@@ -160,7 +160,8 @@ body.yt-immersive .freetextSec { display: none !important; }
 /* --- 質問：元LPの設問カード（水色ヘッダー＋選択肢）をそのまま1問ずつに --- */
 #yutoriApp .yt-qbar { display: flex; align-items: center; gap: 12px; }
 #yutoriApp .yt-back { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line);
-  background: #fff; color: var(--teal-deep); font-size: 18px; line-height: 1; padding: 0; }
+  background: #fff; color: var(--teal-deep); padding: 0; display: flex; align-items: center; justify-content: center; }
+#yutoriApp .yt-back svg { display: block; margin-left: -1px; /* 矢印の見た目の重心を円の中央に */ }
 #yutoriApp .yt-steps { flex: 1; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 5px; }
 #yutoriApp .yt-steps i { height: 6px; border-radius: 99px; background: #e8f1f5; transition: background .3s; }
 #yutoriApp .yt-steps i.is-done { background: #7fcdd6; }
@@ -314,7 +315,7 @@ body.yt-immersive .freetextSec { display: none !important; }
       showTypeNameOnCards: false, // カードの愛称の下にタイプ名（がんばりすぎて空回りタイプ等）を出すか。さわさん判断で非表示（2026-09-22）
       typesNote: 'どのタイプでしょう？\n結果には、そのタイプに合った「余白の作り方」がついています。',
       giftTitle: '診断した人だけのプレゼント',
-      giftText: '忙しい、いつもなんか焦ってる、疲れが取れない…\n\nなのに1日の終わりには「今日も何も終わってない」気がする💦\n\n実はそれ❗️\nあなたに合わない“頑張り方”をしてるかも⁉️\n\nその理由と、あなたにピッタリの「心からホッと休める余白のつくり方」をプレゼント♡', // さわさん指示 2026-09-19 → 2026-09-22 「実はそれ❗️／頑張り方／⁉️」に修正（本人指示）
+      giftText: '忙しい、いつもなんか焦ってる、\n疲れが取れない…\n\nなのに\n1日の終わりには\n「今日も何も終わってない」気がする💦\n\n実はそれ❗️\nあなたに合わない“頑張り方”をしてるかも⁉️\n\nその理由と、\nあなたにピッタリの「心からホッと休める余白のつくり方」をプレゼント♡', // さわさん指示 2026-09-19 → 9/22 「実はそれ❗️／頑張り方／⁉️」 → 9/22 改行位置を本人指定どおりに
       whoName: 'あまのさわ｜「ラク生き」創始者', // さわさん指示 2026-09-19
       whoText: '「頑張る」で人生を切り抜けてきた方たちへ。\n自分を活かして、自然体で楽しく生きる「ラク生き」を、糸島🏝️からオンラインでお伝えしています。', // さわさん指示 2026-09-19
       avatarUrl: 'https://www.reservestock.jp/pictures/33421_iconimage.jpeg', // リザスト上のプロフィール画像。読めない環境ではユーカリのアイコンにフォールバック
@@ -493,7 +494,7 @@ body.yt-immersive .freetextSec { display: none !important; }
       var q = questions[i], total = questions.length, steps = '';
       for (var s = 0; s < total; s++) steps += '<i class="' + (s < i ? 'is-done' : s === i ? 'is-now' : '') + '"></i>';
       app.innerHTML = '<div class="yt-screen">' +
-        '<div class="yt-qbar"><button type="button" class="yt-back" aria-label="前に戻る">‹</button>' +
+        '<div class="yt-qbar"><button type="button" class="yt-back" aria-label="前に戻る"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>' +
         '<div class="yt-steps" aria-hidden="true">' + steps + '</div><span class="yt-count">' + (i + 1) + ' / ' + total + '</span></div>' +
         '<div class="yt-qcard"><div class="yt-q"><span class="yt-qno">Q' + (i + 1) + '</span><p class="yt-qtext">' + esc(q.text) + '</p></div>' +
         '<div class="yt-choices">' +
