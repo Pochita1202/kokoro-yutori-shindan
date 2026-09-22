@@ -131,10 +131,11 @@ body.yt-immersive .freetextSec { display: none !important; }
 #yutoriApp .yt-voices .yt-sec { margin-bottom: 4px; }
 #yutoriApp .yt-note { font-size: 13.5px; margin-top: 6px; }
 #yutoriApp .yt-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-#yutoriApp .yt-tcard { background: var(--type-bg, #fff); border: 1px solid rgba(255, 255, 255, .9); border-radius: 12px; padding: 8px 5px 10px;
+#yutoriApp .yt-tcard { background: var(--type-bg, #fff); border: 1px solid rgba(255, 255, 255, .9); border-radius: 12px; padding: 8px 3px 10px;
   text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(31, 59, 91, .06); }
-#yutoriApp .yt-tcard b { font-size: 12px; line-height: 1.45; font-weight: 700; color: var(--ink); }
-#yutoriApp .yt-tcard.is-blur b { color: transparent; text-shadow: 0 0 7px rgba(31, 59, 91, .55); }
+#yutoriApp .yt-tcard b { font-family: var(--serif); font-size: 13px; line-height: 1.35; font-weight: 700; color: var(--navy); letter-spacing: 0; white-space: nowrap; }
+#yutoriApp .yt-tcard small { display: block; margin-top: -4px; font-size: 10.5px; line-height: 1.4; color: var(--ink-soft); }
+#yutoriApp .yt-tcard.is-blur b, #yutoriApp .yt-tcard.is-blur small { color: transparent; text-shadow: 0 0 7px rgba(31, 59, 91, .55); }
 #yutoriApp .yt-types-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; white-space: pre-line; }
 #yutoriApp .yt-gift { display: flex; gap: 12px; align-items: flex-start; border: 1.5px dashed var(--teal); border-radius: 12px;
   padding: 12px 14px; background: #f7fdfe; }
@@ -270,13 +271,13 @@ body.yt-immersive .freetextSec { display: none !important; }
       { text: '「ちゃんとやらなきゃ」と思った瞬間', choices: ['全部ちゃんとやろうとして詰む', 'ほどほどでOKにできる', '考えすぎて動けなくなる'] }
     ],
     // 合計が min 点以上で判定（上から順）。registerUrl はタイプ別リザスト登録ページ（多目的ページ 162335/162336/162338。申込完了メール＝詳しい結果の1通だけ届く）。hook は結果メール冒頭（さわさん本人の文）から引用。
-    // img はタイプ別イラスト（さわさん提供 2026-09-22。site/img/ に配置、imgBase と結合）。nick はイラスト内の愛称（表示はイラスト側。alt に使う）。bg はイラストの地色（結果画面の背景と入り口カードの色に使う）。peek は入り口カードの丸窓に写す位置（顔まわり・background-position 値）
+    // img はタイプ別イラスト（さわさん提供 2026-09-22。site/img/ に配置、imgBase と結合）。nick はイラスト内の愛称（入り口カードに表示＝さわさん希望 2026-09-22。<wbr> はカードでの改行位置。結果画面はイラスト内の文字に任せ alt にのみ使う）。bg はイラストの地色（結果画面の背景と入り口カードの色に使う）。peek は入り口カードの丸窓に写す位置（顔まわり・background-position 値）
     types: [
       { min: 100, art: 'spin', img: 'type-spin-senju.webp', nick: '千手観音さん', bg: '#fdeff1', peek: '48% 36%', registerUrl: 'https://www.reservestock.jp/inquiry/OGU1MTBhNTdlN', name: 'がんばりすぎて<wbr>空回りタイプ',
         hook: '「今日めっちゃ頑張ったのに、\n結局なに進んだんだっけ…？」\n\n↑これ、週3で思ってません？' },
       { min: 85, art: 'drift', img: 'type-drift-mawashiguruma.webp', nick: '回し車さん', bg: '#e8f7fd', peek: '52% 40%', registerUrl: 'https://www.reservestock.jp/inquiry/N2Q2ZWMyOGY1Y', name: 'なんとなく<wbr>進んでないタイプ',
         hook: 'やることはやってる。ちゃんと生きてる。\n\nでも、「で、私は何が進んだんだろう？」\nってなりませんか？' },
-      { min: -Infinity, art: 'calm', img: 'type-calm-jetcoaster.webp', nick: 'ジェットコースターさん', bg: '#e1fafa', peek: '51% 46%', registerUrl: 'https://www.reservestock.jp/inquiry/NjUzODJkNTY2N', name: 'もうすぐ<wbr>整うタイプ',
+      { min: -Infinity, art: 'calm', img: 'type-calm-jetcoaster.webp', nick: 'ジェット<wbr>コースターさん', bg: '#e1fafa', peek: '51% 46%', registerUrl: 'https://www.reservestock.jp/inquiry/NjUzODJkNTY2N', name: 'もうすぐ<wbr>整うタイプ',
         hook: '惜しい。かなり惜しい。\n\nちゃんと休める日もある。\n「まあいっか」も言える。\nでも、なぜか波がある。' }
     ],
     intro: {
@@ -338,7 +339,7 @@ body.yt-immersive .freetextSec { display: none !important; }
       (blur ? '<span class="yt-thumb-q" aria-hidden="true">?</span>' : '') + '</div>';
   }
   function typeImg(t) {
-    return '<img src="' + esc(CONFIG.imgBase + t.img) + '" alt="' + esc(t.name.replace(/<wbr>/g, '') + '（' + t.nick + '）') +
+    return '<img src="' + esc(CONFIG.imgBase + t.img) + '" alt="' + esc(t.name.replace(/<wbr>/g, '') + '（' + t.nick.replace(/<wbr>/g, '') + '）') +
       '" width="900" height="900" decoding="async">';
   }
   var preloaded = false;
@@ -449,8 +450,9 @@ body.yt-immersive .freetextSec { display: none !important; }
         '<section><p class="yt-sec">' + esc(I.typesTitle) + '</p><div class="yt-types">' +
         CONFIG.types.map(function (t, i) {
           var blur = i === I.blurIndex;
-          return '<div class="yt-tcard' + (blur ? ' is-blur' : '') + '" style="--type-bg:' + esc(t.bg) + '">' + typeThumb(t, blur) + '<b>' +
-            (blur ? 'ひみつの<br>タイプ' : t.name.replace('<wbr>', '<br>')) + '</b></div>';
+          return '<div class="yt-tcard' + (blur ? ' is-blur' : '') + '" style="--type-bg:' + esc(t.bg) + '">' + typeThumb(t, blur) +
+            '<b>' + (blur ? '？？？さん' : t.nick.replace('<wbr>', '<br>')) + '</b>' +
+            '<small>' + (blur ? 'ひみつのタイプ' : t.name.replace('<wbr>', '<br>')) + '</small></div>';
         }).join('') +
         '</div><p class="yt-types-note">' + esc(I.typesNote) + '</p></section>' +
         '<section class="yt-gift"><div class="yt-gift-ico">' + ART.gift + '</div><div><b>' + esc(I.giftTitle) + '</b><span>' + esc(I.giftText) + '</span></div></section>' +
