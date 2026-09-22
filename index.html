@@ -198,7 +198,16 @@ body.yt-immersive .freetextSec { display: none !important; }
   letter-spacing: .03em; word-break: keep-all; overflow-wrap: anywhere; }
 #yutoriApp .yt-result .yt-bubble { margin-top: 8px; text-align: left; white-space: pre-line; max-width: 100%; align-self: stretch; width: auto;
   padding: 14px 16px; background: #fff; border: 1px solid var(--line); box-shadow: 0 4px 14px rgba(31, 59, 91, .06); }
+/* 「さらに」のアイキャッチ吹き出し（黄色マーカー色×ネイビー明朝、下向きのしっぽ） */
+#yutoriApp .yt-more { display: flex; justify-content: center; margin-bottom: -10px; }
+#yutoriApp .yt-more span { position: relative; display: inline-block; padding: 8px 26px; border-radius: 999px;
+  background: var(--marker); color: var(--navy); font-family: var(--serif); font-weight: 700; font-size: 20px; line-height: 1.3; letter-spacing: .12em;
+  box-shadow: 0 6px 16px rgba(30, 63, 158, .14); animation: ytPop 1.6s ease-in-out infinite; }
+#yutoriApp .yt-more span::after { content: ""; position: absolute; left: 50%; bottom: -9px; margin-left: -9px;
+  border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 10px solid var(--marker); }
+@keyframes ytPop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 #yutoriApp .yt-locked { display: flex; flex-direction: column; gap: 8px; }
+#yutoriApp .yt-nb { display: inline-block; white-space: nowrap; }
 #yutoriApp .yt-locked .yt-sec { margin-bottom: 6px; }
 #yutoriApp .yt-lock { display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px; font-size: 14px; line-height: 1.65;
   background: #f7fdfe; border: 1px solid #d3eef1; border-radius: 12px; }
@@ -231,7 +240,7 @@ body.yt-immersive .freetextSec { display: none !important; }
   #yutoriApp .yt-mv-sub { font-size: 14px; padding-left: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  #yutoriApp .yt-screen, #yutoriApp .yt-breath, #yutoriApp .yt-arrow::after { animation: none; }
+  #yutoriApp .yt-screen, #yutoriApp .yt-breath, #yutoriApp .yt-arrow::after, #yutoriApp .yt-more span { animation: none; }
   #yutoriApp .yt-btn, #yutoriApp .yt-choice, #yutoriApp .yt-steps i { transition: none; }
 }
 </style>
@@ -310,11 +319,13 @@ body.yt-immersive .freetextSec { display: none !important; }
     hint: '直感でOKです',
     loadingText: 'タイプを診断中…',
     resultLead: 'いまのわたしは…',
+    moreText: 'さらに', // 結果の一言のあと、ロック項目の前に出す目立つ吹き出し（さわさん希望 2026-09-22）
     lockedTitle: '詳しい結果は、メールでお届けします',
+    lockedTitleTag: '（完全無料）', // 3つ目の項目から見出しの後ろへ移動（さわさん指示 2026-09-22）。途中で折り返さないよう別要素
     lockedItems: [
       '「だから疲れるのか！」あなたが知らずにやってる無意識のクセとは⁉️',
       '「これ、私じゃん🤣」あなた専用の\n“わたしの取扱説明書”',
-      'もうムダに頑張らない！\nあなたに合った「余白の作り方」完全ガイド\n（完全無料）'
+      'もうムダに頑張らない！\nあなたに合った「余白の作り方」完全ガイドBOOK' // 「完全ガイド」→「完全ガイドBOOK」（さわさん指示 2026-09-22）
     ],
     arrowText: 'お名前とメールアドレスを入れて受け取る',
     registerCta: '詳しい結果を無料で受け取る →',
@@ -528,7 +539,8 @@ body.yt-immersive .freetextSec { display: none !important; }
         '<p class="yt-result-lead">' + esc(CONFIG.resultLead) + '</p>' +
         '<div class="yt-art">' + typeImg(type) + '</div>' + // タイプ名・愛称はイラスト内に描かれている（テキスト見出しは alt に集約）
         '<div class="yt-bubble">' + esc(type.hook) + '</div></section>' +
-        '<section class="yt-locked"><p class="yt-sec">' + esc(CONFIG.lockedTitle) + '</p>' +
+        '<div class="yt-more"><span>' + esc(CONFIG.moreText) + '</span></div>' +
+        '<section class="yt-locked"><p class="yt-sec">' + esc(CONFIG.lockedTitle) + (CONFIG.lockedTitleTag ? '<span class="yt-nb">' + esc(CONFIG.lockedTitleTag) + '</span>' : '') + '</p>' +
         CONFIG.lockedItems.map(function (t) { return '<div class="yt-lock">' + lock + '<span>' + esc(t) + '</span></div>'; }).join('') +
         '</section>' +
         (standalone
