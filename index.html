@@ -254,7 +254,7 @@ body.yt-immersive .freetextSec { display: none !important; }
 <div class="site-noscript"><strong>心のゆとり診断テスト</strong><br>この診断は JavaScript を使います。うまく表示されない場合は、<a href="https://www.reservestock.jp/page/fast_scoring/3202">こちらの診断ページ</a>からお試しください。</div>
 </div>
 </main>
-<footer class="site-foot">あまのさわ｜「ラク生き」創始者</footer>
+<footer class="site-foot">あまのさわ｜「ラク生き」創始者<br><a href="privacy.html" style="color:#5b6f84">プライバシーポリシー</a></footer>
 <script>
 /* ===== 心のゆとり診断 アプリ版（元LPの見た目に寄せた版） =====
    2つのモードで動く：
@@ -345,8 +345,31 @@ body.yt-immersive .freetextSec { display: none !important; }
     //    Facebook など流入元を増やす時は、3フォームそれぞれで「診断アプリ_Facebook」を発行し track.facebook に入れて ?src=facebook で配る
     //    ?trackid=XXXX を直接付けた場合はそのまま登録URLに引き継ぐ（1フォーム分のテスト用）
     imgBase: 'img/', // タイプ別イラストの置き場。本番は site/img/（相対）。プレビュー・埋め込み用は build.py が本番URLの絶対パスに差し替える
-    storageKey: 'yutori3202v2'
+    storageKey: 'yutori3202v2',
+    // ▼ Meta（Facebook/Instagram広告）ピクセル。IDを入れて deploy すると本番（shindan.lpsub.site）でだけ動く。空なら何もしない
+    //    送るイベント：PageView／DiagnosisStart（スタート押下）／DiagnosisComplete（結果表示・type付き）／Lead（登録ボタン押下＝広告の最適化に使う）
+    metaPixelId: '4533138067013581', // データセット「さわ_診断アプリ」（2026-09-23作成）
+    metaPixelHost: 'shindan.lpsub.site'
   };
+
+  // Metaピクセル：ID未設定・本番ドメイン以外（プレビュー等）では読み込まない
+  var px = (function () {
+    var id = CONFIG.metaPixelId, on = false;
+    try { on = !!id && location.hostname === CONFIG.metaPixelHost; } catch (e) {}
+    if (on && !window.fbq) {
+      var n = window.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+      if (!window._fbq) window._fbq = n;
+      n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+      var sc = document.createElement('script'); sc.async = true; sc.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      (document.head || document.documentElement).appendChild(sc);
+      window.fbq('init', id);
+      window.fbq('track', 'PageView');
+    }
+    return function (name, params, custom) {
+      if (!on || !window.fbq) return;
+      try { window.fbq(custom ? 'trackCustom' : 'track', name, params || {}); } catch (e) {}
+    };
+  })();
 
 
   // ▼ アートワーク。タイプ別イラストは画像（CONFIG.types[].img）。以下は小物のインラインSVG（グラデ・idは使わない＝複数回描画しても衝突しない）
@@ -450,6 +473,7 @@ body.yt-immersive .freetextSec { display: none !important; }
     }
 
     var answers = restore(questions.length);
+    var resultTracked = false; // DiagnosisComplete はページ表示ごとに1回だけ送る
     // リザストは回答1が初期チェック済みなので、未回答の誤送信を防ぐため一旦外す
     questions.forEach(function (q, i) {
       q.choices.forEach(function (c, j) { if (c.radio) c.radio.checked = answers[i] === j; });
@@ -515,7 +539,7 @@ body.yt-immersive .freetextSec { display: none !important; }
       }
       preloadArt();
       readTrack();
-      app.querySelector('#ytStart').addEventListener('click', function () { showQuestion(0); });
+      app.querySelector('#ytStart').addEventListener('click', function () { px('DiagnosisStart', {}, true); showQuestion(0); });
     }
 
     function showQuestion(i) {
@@ -586,6 +610,10 @@ body.yt-immersive .freetextSec { display: none !important; }
           : '<p class="yt-arrow">' + esc(CONFIG.arrowText) + '</p>') +
         '<button type="button" class="yt-retry">もう一度診断する</button></div>';
       setRegister(true);
+      var typeLabel = type.nick.replace(/<wbr>/g, '');
+      if (!resultTracked) { resultTracked = true; px('DiagnosisComplete', { content_name: typeLabel }, true); }
+      var reg = app.querySelector('.yt-cta.is-static .yt-btn');
+      if (reg) reg.addEventListener('click', function () { px('Lead', { content_name: typeLabel }); });
       app.querySelector('.yt-retry').addEventListener('click', function () {
         answers = answers.map(function () { return null; });
         save();
