@@ -246,6 +246,15 @@ body.yt-immersive .freetextSec { display: none !important; }
   #yutoriApp .yt-screen, #yutoriApp .yt-breath, #yutoriApp .yt-arrow::after, #yutoriApp .yt-more span { animation: none; }
   #yutoriApp .yt-btn, #yutoriApp .yt-choice, #yutoriApp .yt-steps i { transition: none; }
 }
+
+/* 結果画面：画面下に常時表示する登録ボタン（2026-09-26）。本来のボタンが見えている間は .is-hidden で隠れる */
+#yutoriApp .yt-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, .94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  box-shadow: 0 -4px 16px rgba(33, 63, 91, .12); transition: transform .25s ease, opacity .25s ease; }
+#yutoriApp .yt-sticky .yt-btn { max-width: 430px; margin: 0 auto; }
+#yutoriApp .yt-sticky.is-hidden { transform: translateY(110%); opacity: 0; pointer-events: none; }
+#yutoriApp .yt-screen.has-sticky { padding-bottom: 84px; }
 </style>
 </head>
 <body>
@@ -613,7 +622,24 @@ body.yt-immersive .freetextSec { display: none !important; }
       var typeLabel = type.nick.replace(/<wbr>/g, '');
       if (!resultTracked) { resultTracked = true; px('DiagnosisComplete', { content_name: typeLabel }, true); }
       var reg = app.querySelector('.yt-cta.is-static .yt-btn');
-      if (reg) reg.addEventListener('click', function () { px('Lead', { content_name: typeLabel }); });
+      if (reg) {
+        reg.addEventListener('click', function () { px('Lead', { content_name: typeLabel, content_category: 'inline' }); });
+        // 画面下に登録ボタンを常時表示（2026-09-26 さわさんOK）。本来のボタンが画面に入っている間は隠す。app.innerHTML の差し替えで自動的に消える
+        var bar = document.createElement('div');
+        bar.className = 'yt-sticky';
+        bar.innerHTML = '<a class="yt-btn" href="' + esc(reg.getAttribute('href')) + '">' + esc(CONFIG.registerCta) + '</a>';
+        app.appendChild(bar);
+        app.querySelector('.yt-screen').classList.add('has-sticky');
+        bar.querySelector('a').addEventListener('click', function () { px('Lead', { content_name: typeLabel, content_category: 'sticky' }); });
+        var syncBar = function () {
+          if (!bar.isConnected) { window.removeEventListener('scroll', syncBar); window.removeEventListener('resize', syncBar); return; }
+          var r = reg.getBoundingClientRect();
+          bar.classList.toggle('is-hidden', r.top < window.innerHeight && r.bottom > 0);
+        };
+        window.addEventListener('scroll', syncBar, { passive: true });
+        window.addEventListener('resize', syncBar);
+        syncBar();
+      }
       app.querySelector('.yt-retry').addEventListener('click', function () {
         answers = answers.map(function () { return null; });
         save();
