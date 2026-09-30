@@ -335,7 +335,7 @@ body.yt-immersive .freetextSec { display: none !important; }
     loadingText: 'タイプを診断中…',
     resultLead: 'いまのわたしは…',
     moreText: 'さらに', // 結果の一言のあと、ロック項目の前に出す目立つ吹き出し（さわさん希望 2026-09-22）
-    lockedTitle: '詳しい結果と特別なプレゼントをメールでお届けします', // 2026-09-30 さわさん指示（旧「詳しい結果は、メールでお届けします」）
+    lockedTitle: '詳しい結果と特別なプレゼントを\nメールでお届けします', // 2026-09-30 さわさん指示（旧「詳しい結果は、メールでお届けします」）。改行位置もさわさん指定（10/1）。lockedTitleTag は次の行に出る
     lockedTitleTag: '（完全無料）', // 3つ目の項目から見出しの後ろへ移動（さわさん指示 2026-09-22）。途中で折り返さないよう別要素
     lockedItems: [
       '「だから疲れるのか！」あなたが知らずにやってる無意識のクセとは⁉️',
@@ -611,7 +611,7 @@ body.yt-immersive .freetextSec { display: none !important; }
         '<div class="yt-art">' + typeImg(type) + '</div>' + // タイプ名・愛称はイラスト内に描かれている（テキスト見出しは alt に集約）
         '<div class="yt-bubble">' + esc(type.hook) + '</div></section>' +
         '<div class="yt-more"><span>' + esc(CONFIG.moreText) + '</span></div>' +
-        '<section class="yt-locked"><p class="yt-sec">' + esc(CONFIG.lockedTitle) + (CONFIG.lockedTitleTag ? '<span class="yt-nb">' + esc(CONFIG.lockedTitleTag) + '</span>' : '') + '</p>' +
+        '<section class="yt-locked"><p class="yt-sec">' + esc(CONFIG.lockedTitle).replace(/\n/g, '<br>') + (CONFIG.lockedTitleTag ? '<br><span class="yt-nb">' + esc(CONFIG.lockedTitleTag) + '</span>' : '') + '</p>' +
         CONFIG.lockedItems.map(function (t) { return '<div class="yt-lock">' + lock + '<span>' + esc(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</span></div>'; }).join('') +
         '</section>' +
         (standalone
