@@ -335,12 +335,12 @@ body.yt-immersive .freetextSec { display: none !important; }
     loadingText: 'タイプを診断中…',
     resultLead: 'いまのわたしは…',
     moreText: 'さらに', // 結果の一言のあと、ロック項目の前に出す目立つ吹き出し（さわさん希望 2026-09-22）
-    lockedTitle: '詳しい結果は、メールでお届けします',
+    lockedTitle: '詳しい結果と特別なプレゼントをメールでお届けします', // 2026-09-30 さわさん指示（旧「詳しい結果は、メールでお届けします」）
     lockedTitleTag: '（完全無料）', // 3つ目の項目から見出しの後ろへ移動（さわさん指示 2026-09-22）。途中で折り返さないよう別要素
     lockedItems: [
       '「だから疲れるのか！」あなたが知らずにやってる無意識のクセとは⁉️',
       '「これ、私じゃん🤣」あなた専用の\n“わたしの取扱説明書”',
-      'もうムダに頑張らない！\nあなたに合った「余白の作り方」完全ガイドBOOK' // 「完全ガイド」→「完全ガイドBOOK」（さわさん指示 2026-09-22）
+      'もうムダに頑張らない！\n**あなたに合った「余白の作り方」完全ガイドBOOKプレゼント🎁**' // 2026-09-30 さわさん指示：「プレゼント🎁」追加＋太字（**〜** で太字）
     ],
     arrowText: 'お名前とメールアドレスを入れて受け取る',
     registerCta: '詳しい結果を無料で受け取る →',
@@ -612,7 +612,7 @@ body.yt-immersive .freetextSec { display: none !important; }
         '<div class="yt-bubble">' + esc(type.hook) + '</div></section>' +
         '<div class="yt-more"><span>' + esc(CONFIG.moreText) + '</span></div>' +
         '<section class="yt-locked"><p class="yt-sec">' + esc(CONFIG.lockedTitle) + (CONFIG.lockedTitleTag ? '<span class="yt-nb">' + esc(CONFIG.lockedTitleTag) + '</span>' : '') + '</p>' +
-        CONFIG.lockedItems.map(function (t) { return '<div class="yt-lock">' + lock + '<span>' + esc(t) + '</span></div>'; }).join('') +
+        CONFIG.lockedItems.map(function (t) { return '<div class="yt-lock">' + lock + '<span>' + esc(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</span></div>'; }).join('') +
         '</section>' +
         (standalone
           ? '<div class="yt-cta is-static"><a class="yt-btn" href="' + esc(withTrackId(type, type.registerUrl)) + '">' + esc(CONFIG.registerCta) + '</a><small>' + esc(CONFIG.registerNote) + '</small></div>'
