@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>エネルギー消耗タイプ診断｜あまのさわ</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#e8793a">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&family=Yusei+Magic&display=swap">
+<style>
+html,body{margin:0;padding:0}
+body{background:linear-gradient(180deg,#fff1e4 0,#fffaf5 320px,#fff 100%);color:#4a3427;font-family:"M PLUS 1","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+.site-main{padding:20px 12px 8px}
+.site-foot{text-align:center;font-size:12px;color:#7f6656;padding:8px 16px 32px;line-height:1.8}
+</style>
+<style>
+/* ===== エネルギー消耗タイプ診断 アプリ版（モックアップ 2026-10-01） =====
+   心のゆとり診断アプリ（2026-09-17_yutori-diagnosis-app/src/yutori-app.css）をベースに、
+   元LP（page/fast_scoring/3219）のメインビジュアル（アプリコット〜オレンジのグラデ＋金の光、オレンジ明朝）に色を寄せた版。
+   単体ページ専用（リザスト埋め込み用の指定は外した） */
+
+#energy-root {
+  --paper: #ffffff;
+  --paper-2: #fff8f1;
+  --ink: #4a3427;
+  --ink-soft: #7f6656;
+  --line: #f1e1d2;
+  --teal: #e8793a;
+  --teal-deep: #b9561f;
+  --aqua: #fff0e2;        /* 設問ヘッダー・心の声 */
+  --sel-bg: #fff6ea;
+  --sel-line: #e8793a;
+  --navy: #c45a1c;        /* メインビジュアルの明朝見出し */
+  --marker: #ffe08a;      /* メインビジュアルの黄色マーカー */
+  --serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --sans: "M PLUS 1", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  --hand: "Yusei Magic", "Noto Serif JP", "Hiragino Mincho ProN", serif; /* 手書き風（カードの愛称） */
+
+  display: block; box-sizing: border-box; width: 100%; max-width: 430px; margin: 0 auto 40px;
+  padding: 22px 22px 30px; background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 22px rgba(110, 62, 30, .08);
+  overflow: clip; /* ヒーローの角を丸める。clip は sticky を壊さない */
+  font-family: var(--sans); font-size: 15px; line-height: 1.8; text-align: left;
+  -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
+}
+
+/* --- ステージ制御（JSが form にクラスを付けた時だけ効く＝JS無効なら従来表示のまま） --- */
+#energy-root #fast_scoring_items { display: none !important; }
+#energy-root:not(.en-stage-register) .page2-form-customer-block,
+#energy-root:not(.en-stage-register) #button,
+#energy-root:not(.en-stage-register) #errors { display: none !important; }
+body.en-immersive .freetextSec { display: none !important; }
+
+#energyApp, #energyApp *, #energyApp *::before, #energyApp *::after { box-sizing: border-box; }
+#energyApp p { margin: 0; }
+#energyApp button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+#energyApp .en-screen { display: flex; flex-direction: column; gap: 26px; animation: enIn .4s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes enIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+#energyApp mark, #energyApp .en-mk { color: inherit; padding: 0 .08em;
+  background: linear-gradient(transparent 60%, var(--marker) 60%, var(--marker) 92%, transparent 92%); }
+
+/* --- 共通パーツ --- */
+#energyApp .en-sec { font-weight: 700; font-size: 15px; line-height: 1.5; color: #4a3427; margin-bottom: 12px;
+  padding: 3px 0 5px 10px; border-left: 4px solid var(--teal-deep); border-bottom: 2px solid var(--teal-deep); }
+#energyApp .en-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+#energyApp .en-chip { font-size: 11.5px; letter-spacing: .06em; padding: 4px 11px; border-radius: 999px; line-height: 1.6;
+  background: #fff; color: var(--teal-deep); border: 1px solid #f4cfb4; }
+#energyApp .en-chip.is-free { background: var(--teal); color: #fff; border-color: var(--teal); font-weight: 700; }
+#energyApp .en-bubble { background: var(--aqua); border-radius: 18px 18px 18px 4px; padding: 10px 14px;
+  font-size: 14.5px; line-height: 1.7; width: fit-content; max-width: 92%; white-space: pre-line; }
+#energyApp .en-bubble.is-r { align-self: flex-end; border-radius: 18px 18px 4px 18px; background: var(--sel-bg); }
+#energyApp .en-art img, #energyApp .en-gift-ico svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* 入り口カードの丸窓：イラストの一部（顔まわり）をチラ見せ。固定サイズ＋背景画像＝古いブラウザでも崩れない */
+#energyApp .en-thumb { position: relative; width: 78px; height: 78px; border-radius: 50%; overflow: hidden; margin-top: 4px;
+  background: #fff; border: 3px solid #fff; box-shadow: 0 3px 10px rgba(110, 62, 30, .14); }
+#energyApp .en-thumb-img { position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  background-repeat: no-repeat; background-size: 250% auto; background-color: var(--type-bg, #fff4ea); }
+#energyApp .is-blur .en-thumb-img { filter: blur(4px); transform: scale(1.15); opacity: .85; }
+#energyApp .en-thumb-q { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-weight: 700; font-size: 34px; line-height: 1; color: var(--navy); text-shadow: 0 0 10px #fff, 0 0 4px #fff; }
+/* 結果のイラスト：カードの端まで画面いっぱいに（正方形・枠なし）。周りの背景はイラストの地色（--type-bg）に合わせて一体化 */
+#energyApp .en-art { width: calc(100% + 44px); margin: 2px -22px 0; aspect-ratio: 1 / 1; background: var(--type-bg, #fff4ea); }
+#energyApp .en-btn { display: block; width: 100%; text-align: center; text-decoration: none; border: 0; border-radius: 50px; padding: 16px 18px;
+  background: linear-gradient(358deg, #f0894a, #d0581f); color: #fff; font-weight: 700; font-size: 18px; line-height: 1.4;
+  box-shadow: 0 8px 20px rgba(185, 86, 31, .28); letter-spacing: .04em; transition: transform .12s ease, filter .12s ease; }
+#energyApp .en-btn:hover { filter: brightness(1.08); }
+#energyApp .en-btn:active { transform: scale(.985); }
+#energyApp button:focus-visible { outline: 3px solid rgba(232, 121, 58, .5); outline-offset: 3px; }
+
+/* --- 入り口：メインビジュアル風ヒーロー（ページに本物のメインビジュアルがある時は出さない） --- */
+#energyApp .en-mv { margin: -22px -22px 0; padding: 30px 22px 24px; font-family: var(--serif); color: #7a5236; text-align: center;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(255, 255, 240, .95), transparent 34%),
+    radial-gradient(circle at 88% 70%, rgba(255, 236, 190, .8), transparent 30%),
+    radial-gradient(circle at 10% 90%, rgba(255, 255, 255, .55), transparent 36%),
+    linear-gradient(160deg, #fff3dc 0%, #ffd9b0 48%, #f6a879 100%); }
+#energyApp .en-mv-copy { font-weight: 700; line-height: 1.5; letter-spacing: .02em; }
+#energyApp .en-mv-copy .l1 { display: block; font-size: 23px; color: var(--navy); }
+#energyApp .en-mv-copy .l2 { display: block; font-size: 40px; line-height: 1.3; color: var(--navy); }
+#energyApp .en-mv-copy .l2 small { font-size: 22px; color: #4a3427; }
+#energyApp .en-mv-copy .l3 { display: block; font-size: 22px; margin-top: 4px; }
+#energyApp .en-mv-copy .l4 { display: block; font-size: 30px; color: var(--navy); letter-spacing: .06em; }
+#energyApp .en-mv-name { margin-top: 14px; padding-top: 10px; border-top: 1.5px solid var(--navy);
+  font-weight: 700; font-size: 19px; letter-spacing: .32em; color: var(--navy); white-space: nowrap; }
+#energyApp .en-mv-row { margin-top: 14px; display: flex; align-items: center; gap: 14px; }
+#energyApp .en-mv-badge { flex: none; width: 74px; height: 74px; border-radius: 50%; background: #fff; color: var(--navy);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; line-height: 1.15;
+  box-shadow: 0 4px 14px rgba(196, 90, 28, .12); }
+#energyApp .en-mv-badge b { font-size: 25px; line-height: 1.1; }
+#energyApp .en-mv-sub { font-weight: 700; font-size: 15.5px; line-height: 1.6; color: var(--navy); padding-left: 14px; border-left: 1.5px solid var(--navy); }
+#energyApp .en-title { font-family: var(--serif); font-weight: 700; font-size: 25px; line-height: 1.45; margin: 0; color: var(--navy);
+  letter-spacing: .04em; border: 0; padding: 0; background: none; }
+
+#energyApp .en-hero { display: flex; flex-direction: column; gap: 14px; }
+#energyApp .en-lede { color: var(--ink); font-size: 14.5px; }
+#energyApp .en-voices { display: flex; flex-direction: column; gap: 10px; }
+#energyApp .en-voices .en-sec { margin-bottom: 4px; }
+#energyApp .en-note { font-size: 13.5px; margin-top: 6px; }
+#energyApp .en-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+#energyApp .en-types-img img { display: block; width: 100%; height: auto; }
+#energyApp .en-tcard { background: var(--type-bg, #fff); border: 1px solid rgba(255, 255, 255, .9); border-radius: 12px; padding: 8px 3px 10px;
+  text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(110, 62, 30, .06); }
+#energyApp .en-tcard b { font-family: var(--hand); font-size: 15px; line-height: 1.3; font-weight: 400; color: var(--navy); letter-spacing: 0; white-space: nowrap; margin-top: 2px; }
+#energyApp .en-tcard small { display: block; margin-top: -4px; font-size: 10.5px; line-height: 1.4; color: var(--ink-soft); }
+#energyApp .en-tcard.is-blur b, #energyApp .en-tcard.is-blur small { color: transparent; text-shadow: 0 0 7px rgba(110, 62, 30, .55); }
+#energyApp .en-types-note { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; white-space: pre-line; }
+#energyApp .en-gift { display: flex; gap: 12px; align-items: flex-start; border: 1.5px dashed var(--teal); border-radius: 12px;
+  padding: 12px 14px; background: #fffaf4; }
+#energyApp .en-gift-ico { width: 46px; height: 46px; flex: none; }
+#energyApp .en-gift b { font-size: 14px; display: block; color: var(--teal-deep); }
+#energyApp .en-gift span { font-size: 12.5px; color: var(--ink-soft); line-height: 1.75; display: block; white-space: pre-line; }
+#energyApp .en-who { display: flex; gap: 12px; align-items: flex-start; }
+#energyApp .en-avatar { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 35% 30%, #f3faf6, #cfe6ee); border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(110, 62, 30, .15); display: grid; place-items: center; }
+#energyApp .en-avatar svg { width: 36px; height: 36px; }
+#energyApp .en-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#energyApp .en-who b { font-family: var(--serif); font-size: 14.5px; display: block; color: #4a3427; }
+#energyApp .en-who p { margin-top: 2px; font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-line; }
+#energyApp .en-cta { position: sticky; bottom: 0; z-index: 2; margin-top: -8px; padding: 22px 0 12px;
+  background: linear-gradient(transparent, var(--paper) 38%); }
+#energyApp .en-cta.is-static { position: static; margin-top: 0; padding: 0; background: none; }
+#energyApp .en-cta small { display: block; text-align: center; font-size: 11.5px; color: var(--ink-soft); margin-top: 8px; }
+
+/* --- 質問：元LPの設問カード（水色ヘッダー＋選択肢）をそのまま1問ずつに --- */
+#energyApp .en-qbar { display: flex; align-items: center; gap: 12px; }
+#energyApp .en-back { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line);
+  background: #fff; color: var(--teal-deep); padding: 0; display: flex; align-items: center; justify-content: center; }
+#energyApp .en-back svg { display: block; margin-left: -1px; /* 矢印の見た目の重心を円の中央に */ }
+#energyApp .en-steps { flex: 1; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 5px; }
+#energyApp .en-steps i { height: 6px; border-radius: 99px; background: #f6e9df; transition: background .3s; }
+#energyApp .en-steps i.is-done { background: #f3b48a; }
+#energyApp .en-steps i.is-now { background: var(--teal); }
+#energyApp .en-count { flex: none; font-size: 12.5px; font-weight: 700; color: var(--teal-deep); font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+#energyApp .en-qcard { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+  box-shadow: 0 6px 22px rgba(110, 62, 30, .08); margin: 0 -6px; }
+#energyApp .en-q { background: var(--aqua); padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 4px; min-height: 6.4em; }
+#energyApp .en-qno { font-weight: 700; font-size: 12px; color: var(--teal-deep); letter-spacing: .14em; }
+#energyApp .en-qtext { font-weight: 700; font-size: 18px; line-height: 1.55; color: var(--ink); }
+#energyApp .en-choices { display: flex; flex-direction: column; gap: 12px; padding: 18px 14px 18px; }
+#energyApp .en-choice { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 15px 14px;
+  font-size: 15.5px; line-height: 1.55; color: #4a3427; background: #fffcf8; border: 1.5px solid #eddccd; border-radius: 12px;
+  transition: background .15s, border-color .15s, transform .1s; }
+#energyApp .en-choice:hover { border-color: #f0b88f; }
+#energyApp .en-choice:active { transform: scale(.985); }
+#energyApp .en-dot { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #b49a88; background: #fff; position: relative; }
+#energyApp .en-choice.is-selected { background: var(--sel-bg); border-color: var(--sel-line); }
+#energyApp .en-choice.is-selected .en-dot { border-color: var(--sel-line); }
+#energyApp .en-choice.is-selected .en-dot::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--sel-line); }
+#energyApp .en-hint { text-align: center; font-size: 12.5px; color: var(--ink-soft); }
+
+/* --- 診断中 --- */
+#energyApp .en-loading { align-items: center; padding: 70px 0 80px; gap: 20px; }
+#energyApp .en-loading p { font-weight: 700; font-size: 15px; color: var(--teal-deep); }
+#energyApp .en-breath { width: 64px; height: 64px; border-radius: 50%; background: var(--aqua); border: 1.5px solid #f6d6bd;
+  display: grid; place-items: center; animation: enBreath 1.3s ease-in-out infinite; }
+#energyApp .en-breath svg { width: 40px; height: 40px; }
+@keyframes enBreath { 0%,100% { transform: scale(.9); } 50% { transform: scale(1.08); } }
+
+/* --- 結果 --- */
+#energyApp .en-result { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;
+  margin: -22px -22px 0; padding: 26px 22px 20px;
+  background: var(--type-bg, #fff4ea); }
+#energyApp .en-result-lead { font-family: var(--serif); font-weight: 700; font-size: 15px; color: #4a3427; letter-spacing: .08em; }
+#energyApp .en-type { font-family: var(--serif); font-weight: 700; font-size: clamp(22px, 6.6vw, 28px); line-height: 1.5; color: var(--navy);
+  letter-spacing: .03em; word-break: keep-all; overflow-wrap: anywhere; }
+#energyApp .en-result .en-bubble { margin-top: 8px; text-align: left; white-space: pre-line; max-width: 100%; align-self: stretch; width: auto;
+  padding: 14px 16px; background: #fff; border: 1px solid var(--line); box-shadow: 0 4px 14px rgba(110, 62, 30, .06); }
+/* 「さらに」のアイキャッチ吹き出し（黄色マーカー色×ネイビー明朝、下向きのしっぽ） */
+#energyApp .en-more { display: flex; justify-content: center; margin-bottom: -10px; }
+#energyApp .en-more span { position: relative; display: inline-block; padding: 8px 26px; border-radius: 999px;
+  background: var(--marker); color: var(--navy); font-family: var(--serif); font-weight: 700; font-size: 20px; line-height: 1.3; letter-spacing: .12em;
+  box-shadow: 0 6px 16px rgba(196, 90, 28, .14); animation: enPop 1.6s ease-in-out infinite; }
+#energyApp .en-more span::after { content: ""; position: absolute; left: 50%; bottom: -9px; margin-left: -9px;
+  border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 10px solid var(--marker); }
+@keyframes enPop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+#energyApp .en-locked { display: flex; flex-direction: column; gap: 8px; }
+#energyApp .en-nb { display: inline-block; white-space: nowrap; }
+#energyApp .en-locked .en-sec { margin-bottom: 6px; }
+#energyApp .en-lock { display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px; font-size: 14px; line-height: 1.65;
+  background: #fffaf4; border: 1px solid #f5dcc8; border-radius: 12px; }
+#energyApp .en-lock svg { flex: none; margin-top: 4px; }
+#energyApp .en-lock span { white-space: pre-line; }
+#energyApp .en-arrow { text-align: center; font-weight: 700; font-size: 14px; color: var(--teal-deep); }
+#energyApp .en-arrow::after { content: ""; display: block; width: 9px; height: 9px; margin: 6px auto 0;
+  border-right: 2.5px solid var(--teal); border-bottom: 2.5px solid var(--teal); transform: rotate(45deg); animation: enBob 1.4s ease-in-out infinite; }
+@keyframes enBob { 0%,100% { transform: translateY(0) rotate(45deg); } 50% { transform: translateY(5px) rotate(45deg); } }
+#energyApp .en-retry { align-self: center; background: none; border: 0; padding: 4px 8px; font-size: 12.5px; color: var(--ink-soft); text-decoration: underline; }
+
+@media (max-width: 480px) {
+  #energy-root { padding: 20px 18px 26px; }
+  #energyApp .en-mv, #energyApp .en-result { margin-left: -18px; margin-right: -18px; margin-top: -20px; padding-left: 18px; padding-right: 18px; }
+  #energyApp .en-art { width: calc(100% + 36px); margin-left: -18px; margin-right: -18px; }
+  #energyApp .en-mv-copy .l2 { font-size: 36px; }
+  #energyApp .en-mv-name { font-size: 17px; letter-spacing: .26em; }
+  #energyApp .en-mv-row { gap: 12px; }
+  #energyApp .en-mv-sub { font-size: 14px; padding-left: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #energyApp .en-screen, #energyApp .en-breath, #energyApp .en-arrow::after, #energyApp .en-more span { animation: none; }
+  #energyApp .en-btn, #energyApp .en-choice, #energyApp .en-steps i { transition: none; }
+}
+
+/* 結果画面：画面下に常時表示する登録ボタン（2026-09-26）。本来のボタンが見えている間は .is-hidden で隠れる */
+#energyApp .en-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, .94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  box-shadow: 0 -4px 16px rgba(110, 62, 30, .12); transition: transform .25s ease, opacity .25s ease; }
+#energyApp .en-sticky .en-btn { max-width: 430px; margin: 0 auto; }
+#energyApp .en-sticky.is-hidden { transform: translateY(110%); opacity: 0; pointer-events: none; }
+#energyApp .en-screen.has-sticky { padding-bottom: 84px; }
+
+/* ===== ここからエネルギー診断で足したもの ===== */
+/* ヒーロー（3219のメインビジュアルの文言・配置を再現。本物の画像に差し替える時は CONFIG.intro.heroImage） */
+#energyApp .en-mv-kicker { display: inline-block; font-weight: 700; font-size: 17px; letter-spacing: .08em; color: #7a5236;
+  padding: 0 4px 6px; border-bottom: 1.5px solid rgba(122, 82, 54, .45); }
+#energyApp .en-mv-title { margin-top: 12px; font-weight: 700; font-size: 36px; line-height: 1.32; letter-spacing: .06em; color: #e0662a;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, .7), 0 0 18px rgba(255, 247, 225, .9); }
+#energyApp .en-mv-orn { display: block; width: 150px; height: 12px; margin: 10px auto 8px; }
+#energyApp .en-mv-sub2 { font-weight: 700; font-size: 15px; letter-spacing: .04em; color: #7a5236; }
+#energyApp .en-mv-img { margin: -22px -22px 0; }
+#energyApp .en-mv-img img { display: block; width: 100%; height: auto; }
+
+/* 「それ！」の気づきボックスと、解説（逆効果 → タイプを知らないだけ） */
+#energyApp .en-aha { background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 14px 16px; text-align: center;
+  font-size: 15px; line-height: 1.8; white-space: pre-line; box-shadow: 0 6px 16px rgba(185, 86, 31, .1); }
+#energyApp .en-aha b { color: var(--navy); font-family: var(--serif); font-size: 17px; }
+#energyApp .en-explain { display: flex; flex-direction: column; gap: 10px; font-size: 14.5px; line-height: 1.85; }
+#energyApp .en-explain p { white-space: pre-line; }
+#energyApp .en-explain ul { margin: 0; padding: 10px 14px; list-style: none; background: var(--paper-2); border-radius: 12px; }
+#energyApp .en-explain li::before { content: "・"; color: var(--teal-deep); }
+#energyApp .en-big { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--navy); letter-spacing: .1em; }
+#energyApp .en-conc { text-align: center; padding: 14px 12px; background: var(--aqua); border-radius: 14px; }
+#energyApp .en-conc p { white-space: pre-line; }
+#energyApp .en-conc .en-big { font-size: 20px; margin-top: 4px; }
+
+/* 4タイプのカード（2×2）。イラストは仮枠 */
+#energyApp .en-types { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+#energyApp .en-tcard { background: var(--type-bg, #fff); border-radius: 14px; padding: 12px 8px 12px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(110, 62, 30, .07); }
+#energyApp .en-tcard b { font-family: var(--hand); font-weight: 400; font-size: 14px; line-height: 1.4; color: var(--navy); }
+#energyApp .en-tcard.is-blur b { color: transparent; text-shadow: 0 0 7px rgba(110, 62, 30, .55); }
+#energyApp .en-ph { position: relative; display: grid; place-items: center; border: 2px dashed rgba(185, 86, 31, .35); background: rgba(255, 255, 255, .55); color: var(--teal-deep); }
+#energyApp .en-ph svg { width: 56%; height: auto; opacity: .55; }
+#energyApp .en-ph-dot { width: 84px; height: 84px; border-radius: 50%; }
+#energyApp .en-ph-dot svg { width: 64%; }
+#energyApp .en-ph-q { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--serif); font-weight: 700; font-size: 36px; color: var(--navy); text-shadow: 0 0 10px #fff; }
+#energyApp .is-blur .en-ph svg { filter: blur(3px); }
+#energyApp .en-ph-tag { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); white-space: nowrap;
+  font-size: 12px; font-weight: 700; letter-spacing: .06em; color: var(--teal-deep); background: #fff; border-radius: 999px; padding: 4px 12px; box-shadow: 0 2px 8px rgba(110, 62, 30, .12); }
+
+/* 結果：イラスト仮枠（正方形・カード端まで）とタイプ名 */
+#energyApp .en-art .en-ph { width: 100%; height: 100%; border-width: 0; border-top: 2px dashed rgba(185, 86, 31, .3); border-bottom: 2px dashed rgba(185, 86, 31, .3); background: transparent; }
+#energyApp .en-art .en-ph svg { width: 46%; }
+#energyApp .en-catch { font-size: 13px; color: var(--ink-soft); letter-spacing: .04em; margin-top: 4px; }
+#energyApp .en-type { font-family: var(--serif); font-weight: 700; font-size: 24px; line-height: 1.45; color: var(--navy); letter-spacing: .03em; word-break: keep-all; overflow-wrap: anywhere; }
+#energyApp .en-type small { display: block; font-size: 12px; letter-spacing: .1em; color: var(--ink-soft); font-family: var(--sans); font-weight: 700; }
+
+/* プレゼント（タイプ別の解説BOOK）。表紙画像つき */
+#energyApp .en-book { display: flex; gap: 14px; align-items: center; padding: 12px 14px; border: 1.5px dashed var(--teal); border-radius: 14px; background: #fffaf4; }
+#energyApp .en-book b { display: block; font-size: 14px; line-height: 1.6; color: var(--teal-deep); }
+#energyApp .en-book span { display: block; font-size: 12.5px; line-height: 1.7; color: var(--ink-soft); margin-top: 2px; white-space: pre-line; }
+#energyApp .en-books { display: flex; justify-content: center; align-items: flex-end; gap: 10px; margin: 6px 0 10px; padding-bottom: 6px; }
+
+/* モックアップ用：未接続ボタンの案内 */
+#energyApp .en-toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 60; max-width: calc(100% - 32px);
+  background: #4a3427; color: #fff; font-size: 13px; line-height: 1.6; padding: 10px 16px; border-radius: 12px; text-align: center;
+  opacity: 0; pointer-events: none; transition: opacity .2s; }
+#energyApp .en-toast.on { opacity: 1; }
+@media (max-width: 480px) {
+  #energyApp .en-mv-img { margin-left: -18px; margin-right: -18px; margin-top: -20px; }
+  #energyApp .en-mv-title { font-size: 32px; }
+}
+
+/* プレゼントの解説本：本の装丁（表紙は今の画像そのまま。右に小口＝ページの重なり、左に背の折り目、下に影）
+   --bw＝本の幅。厚みは幅の約13%。表紙画像の縦横比は 495:700 */
+#energyApp .en-book3d { --bt: calc(var(--bw) * .18); flex: none; display: inline-block; width: var(--bw); perspective: 700px; }
+#energyApp .en-book3d-in { position: relative; display: block; width: var(--bw); aspect-ratio: 495 / 700;
+  transform-style: preserve-3d; transform: rotateY(-28deg); transition: transform .4s ease; }
+#energyApp .en-book3d-in img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover;
+  transform: translateZ(calc(var(--bt) / 2)); border-radius: 1px 3px 3px 1px; box-shadow: 4px 6px 14px rgba(74, 52, 39, .28); }
+/* 背の折り目（ハードカバーの溝） */
+#energyApp .en-book3d-in::after { content: ""; position: absolute; inset: 0; transform: translateZ(calc(var(--bt) / 2 + .5px)); pointer-events: none; border-radius: 1px 3px 3px 1px;
+  background: linear-gradient(90deg, rgba(0,0,0,.18) 0, rgba(255,255,255,.35) 3%, rgba(0,0,0,.08) 6%, transparent 9%, transparent 92%, rgba(255,255,255,.18) 100%); }
+/* 小口（ページの重なり） */
+#energyApp .en-book3d-in::before { content: ""; position: absolute; top: 2px; bottom: 2px; right: 0; width: var(--bt);
+  transform: translateX(calc(var(--bt) / 2 - 2px)) rotateY(90deg);
+  background: linear-gradient(180deg, rgba(0,0,0,.06), transparent 20%, transparent 80%, rgba(0,0,0,.1)), repeating-linear-gradient(90deg, #fbf6ef 0, #fbf6ef 1.2px, #d9cbbb 1.6px, #fbf6ef 2px); box-shadow: inset 0 0 0 .5px rgba(0,0,0,.12); }
+#energyApp .en-books .en-book3d:nth-child(odd) .en-book3d-in { transform: rotateY(-28deg) translateY(4px); }
+@media (hover: hover) { #energyApp .en-book3d:hover .en-book3d-in { transform: rotateY(-8deg); } }
+#energyApp .en-book { align-items: center; gap: 18px; padding: 16px 16px 16px 18px; }
+
+/* 生徒さんの声（結果画面・登録ボタンの前）。LINEの吹き出しっぽく、名前・アイコンは出さない */
+#energyApp .en-voice { display: flex; flex-direction: column; gap: 12px; padding: 18px 14px 16px; margin: 0 -6px;
+  background: var(--paper-2); border-radius: 16px; }
+#energyApp .en-voice-title { text-align: center; font-family: var(--serif); font-weight: 700; font-size: 18px; line-height: 1.5; color: var(--navy); letter-spacing: .04em; }
+#energyApp .en-vcard { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+#energyApp .en-vcard:nth-child(odd) { align-items: flex-end; }
+#energyApp .en-vcard blockquote { margin: 0; background: #fff; border-radius: 18px 18px 18px 4px; padding: 11px 14px;
+  font-size: 14px; line-height: 1.75; white-space: pre-line; box-shadow: 0 3px 10px rgba(110, 62, 30, .08); max-width: 94%; }
+#energyApp .en-vcard:nth-child(odd) blockquote { border-radius: 18px 18px 4px 18px; }
+#energyApp .en-vcard figcaption { font-size: 11.5px; color: var(--ink-soft); padding: 0 6px; }
+
+/* 動物イラスト（2026-10-01 さわさん提供）：入り口カードの顔の丸窓 */
+#energyApp .en-face { position: relative; width: 88px; height: 88px; border-radius: 50%; overflow: hidden; background: #fff;
+  border: 3px solid #fff; box-shadow: 0 3px 10px rgba(110, 62, 30, .14); }
+#energyApp .en-face-img { position: absolute; inset: 0; background-size: cover; background-position: center; }
+#energyApp .is-blur .en-face-img { filter: blur(5px); transform: scale(1.15); opacity: .85; }
+#energyApp .en-tcard b { font-size: 15px; }
+/* 結果のイラスト：タイプ名入りの横長カード画像。角丸で、結果エリアの中に置く */
+#energyApp .en-art.is-img { width: 100%; margin: 2px 0 0; aspect-ratio: 714 / 535; border-radius: 14px; overflow: hidden; background: transparent;
+  box-shadow: 0 6px 18px rgba(110, 62, 30, .14); }
+#energyApp .en-type small { margin-top: 2px; }
+#energyApp .en-type-label { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; color: var(--ink-soft);
+  background: rgba(255, 255, 255, .8); border: 1px solid var(--line); border-radius: 999px; padding: 3px 14px; }
+</style>
+</head>
+<body>
+<main class="site-main"><div id="energy-root"></div></main>
+<footer class="site-foot">あまのさわ｜「ラク生き」創始者<br><a href="../privacy.html" style="color:#7f6656">プライバシーポリシー</a></footer>
+<script>
+/* ===== エネルギー消耗タイプ診断 アプリ版（モックアップ 2026-10-01） =====
+   心のゆとり診断アプリ（../2026-09-17_yutori-diagnosis-app/src/yutori-app.js）の単体ページ版をベースにした試作。
+   <div id="energy-root"> に描画する。入り口 → 5問（1問ずつ）→ 診断中 → タイプ表示 → 登録ボタン。
+
+   ▼ モックアップの段階で「仮」のもの（本番前に差し替える）
+   - タイプ別イラスト … 仮枠（CONFIG.types[].img が空なら仮枠を描く。画像を入れたら自動でそちらを表示）
+   - タイプ名 … 解説本の本文から仮に付けた名前（さわさんに決めてもらう）
+   - 配点・判定 … 仮（リザスト #3219 の「質問と回答と点数の設定」「合計得点と答えの編集」が見えていないため）
+   - 登録先 … 未接続（registerUrl が空ならボタンは案内を出すだけ）
+   設問・入り口の文章はリザスト #3219 の公開ページの文（さわさん本人の文）をそのまま使っている */
+(function () {
+  'use strict';
+
+  var CONFIG = {
+    // 設問（リザスト #3219 と同じ文言・順番）
+    questions: [
+      { text: '初めての場所やイベントに誘われたとき', choices: ['ワクワクしてすぐ行きたい', '興味はあるけど少し不安', 'できれば避けたい'] },
+      { text: '人混みや騒がしい場所に長時間いると', choices: ['楽しいけど後でどっと疲れる', 'あまり気にならない', 'すぐに疲れて離れたくなる'] },
+      { text: '人の感情や空気感について', choices: ['すぐ感じ取るし影響も受けやすい', 'ある程度は気づく', 'あまり気にならない'] },
+      { text: '新しいことへの挑戦について', choices: ['好奇心が強く、どんどん試したい', '準備してから挑戦する', '変化は苦手で避けがち'] },
+      { text: '理想の休日の過ごし方は？', choices: ['予定がある方が楽しいし、いくつか入れたい', '予定は1つくらいにして、あとはゆっくりしたい', '予定はなるべく入れず、静かに過ごしたい'] }
+    ],
+    // 【仮】配点。選択肢ごとに [好奇心（HSS）, 感じ取りやすさ（HSP）] の2軸で加点し、しきい値以上を「＋」とする
+    //  本番はリザスト #3219 の配点・判定に合わせて差し替える（リザストが合計点1本で判定している場合は min 方式に戻す）
+    scores: [
+      [[2, 0], [1, 1], [0, 1]],
+      [[1, 1], [0, 0], [0, 2]],
+      [[0, 2], [0, 1], [0, 0]],
+      [[2, 0], [1, 0], [0, 0]],
+      [[2, 0], [1, 1], [0, 1]]
+    ],
+    threshold: { hss: 4, hsp: 3 },
+    // 4タイプ。hss/hsp は判定（true＝＋）。name＝動物のタイプ名（さわさん×ぽち太さん決定 2026-10-01）。label＝解説本の表記（結果画面にだけサブで出す）。catch と hook は解説本（さわさん本人の文）から引用
+    // img＝結果画面のイラスト（さわさん提供のタイプ別カード画像を4分割・714×535前後。タイプ名入り）。空なら仮枠
+    // face＝入り口カードの丸窓（さわさん提供の4分割イラストから顔まわりを正方形に切り抜き）。bg＝イラストの地色
+    // book はプレゼントの解説本の表紙（統一版20260723 の表紙を縮小）
+    // registerUrl＝既存のタイプ別ステップメール「エネルギー消耗タイプ診断｜HSS（±）×HSP（±）」の登録ページ（限定公開。2026-10-02 つなぎ込み）
+    //   #363034 HSS＋HSP＋／#363041 HSS＋HSP－／#363040 HSS－HSP＋／#363042 HSS－HSP－。数値IDのURLは限定公開のため404 → ハッシュID形式を使う（スマホ・PCとも200を確認）
+    types: [
+      { key: 'hss-hsp', hss: true, hsp: true, label: 'HSS型HSP', name: '気にしぃ<wbr>ハリネズミタイプ', img: 'type-hss-hsp.jpg', face: 'face-hss-hsp.jpg', bg: '#fdeee6',
+        catch: '強い好奇心と繊細な感性をあわせ持つあなたへ',
+        hook: 'まだ朝なのに、\n気持ちだけ全力疾走しはじめる。\nなのに\nカラダが、追いつかない。',
+        book: 'book-hss-hsp.jpg', bookTitle: 'HSS型HSP解説本', registerUrl: 'https://www.reservestock.jp/subscribe/NzBkYjc3NGJjM' },
+      { key: 'hss', hss: true, hsp: false, label: 'HSS', name: '即GO<wbr>カワウソタイプ', img: 'type-hss.jpg', face: 'face-hss.jpg', bg: '#e8f5fc',
+        catch: 'やりたい気持ちは強いのに、\nなぜか続かなくなるあなたへ',
+        hook: '勢いが乗ると、\n一気に行動できたりもする。\n\nでも\nしばらくすると、\n急に止まる。',
+        book: 'book-hss.jpg', bookTitle: 'HSS解説本', registerUrl: 'https://www.reservestock.jp/subscribe/MTNlZWViZTI0O' },
+      { key: 'hsp', hss: false, hsp: true, label: 'HSP', name: 'やりたい疲れた<wbr>アライグマタイプ', img: 'type-hsp.jpg', face: 'face-hsp.jpg', bg: '#e3f0df',
+        catch: '周りの空気や人の気持ちを、\n深く感じ取ってしまうあなたへ',
+        hook: '家族の空気。\n相手の機嫌。\n職場の雰囲気。\nLINEの文章の裏の意図。\n\nそういうものを、\n無意識で受け取り続けてる。',
+        book: 'book-hsp.jpg', bookTitle: 'HSP解説本', registerUrl: 'https://www.reservestock.jp/subscribe/MWVjMTU4MTY2N' },
+      { key: 'ganbari', hss: false, hsp: false, label: '頑張り屋さん', name: '全部やっとく<wbr>ビーバータイプ', img: 'type-ganbari.jpg', face: 'face-ganbari.jpg', bg: '#fdefcb',
+        catch: '休んでも、なんだか疲れが抜けないあなたへ',
+        hook: '「ちゃんと休んでるはずなのに、\nなんかずっと疲れてる…」\n\nカラダは止まってるのに、\n気持ちが休まらない。',
+        book: 'book-ganbari.jpg', bookTitle: '頑張り屋さん解説本', registerUrl: 'https://www.reservestock.jp/subscribe/YTJhZTI2OWJhM' }
+    ],
+    intro: {
+      heroImage: 'hero.jpg', // 冒頭のキャッチ画像（さわさん提供 2026-10-01・1200×800）。空ならコードで再現したヒーロー
+      kicker: 'なんでこんなに疲れるの？',
+      title: 'エネルギー消耗\nタイプ診断',
+      sub: '〜動けない理由とラクに動けるコツ〜',
+      chips: ['無料', '1分', '5つの質問', '結果は4タイプ'],
+      voicesTitle: 'こんな心の声、ありませんか',
+      // ▼ ここから #3219 の公開ページの文（さわさん本人の文）。原文の「終わちゃった」「動けなくなるちゃう」だけ誤字として直した
+      voices: [
+        '本当はやりたいことがあるのに、\nなぜか動けなくなる。',
+        '「やろう」と思ってたのに、\n気づいたら何もできないまま\n1日が終わっちゃった。',
+        '気持ちはあるのに、\nカラダがついてこない…。',
+        '「疲れて動けなくなっちゃう\n自分がイヤになる…」'
+      ],
+      voicesAfter: 'なんとか自分を奮起させ\n気合いや努力でどうにかしようとする\nけど…\n\n実際は、\n無理して動いて、あとで動けなくなったり\n休んでもスッキリ回復しなかったり\n「またできなかった」って\n自分を責めることが増えていく。',
+      aha: 'もしこれ、少しでも当てはまるなら\n<b>それ！</b>\n気合や努力不足じゃなくて\n<b>“頑張り方がズレてる状態”</b>\nかもしれません。',
+      explainLead: '多くの人はここで',
+      explainList: ['疲れないようにしなきゃ', 'もっと強くならなきゃ'],
+      explainMid: 'って頑張ります。\nでもそれ、実は',
+      explainBig: '逆効果',
+      explainTail: 'です。\n\n自分のタイプを知らずに\n無理して動くから、\nエネルギーが一気に消耗して止まっちゃうんです。',
+      conc: 'つまりあなたは…\n👉 弱いわけでも\n👉 根性が足りないわけでもなくて',
+      concBig: 'タイプを知らないだけ。',
+      typesTitle: '結果は、この4タイプのどれか',
+      blurIndex: [1], // チラ見せで「？」にするタイプ（0始まり・複数可）。さわさん希望 2026-10-02 で右上（即GOカワウソ）の1つだけ
+      typesNote: 'どのタイプでしょう？',
+      learnTitle: 'この診断でわかること',
+      learnList: ['なぜこんなに疲れるのか', 'なぜ動きたいのに止まるのか', '私の場合、\nどうすればラクに動けるのか'], // 3つ目はぽち太さん指示 2026-10-01（結果画面とそろえる）
+      learnNote: 'あなたのタイプがハッキリわかります。',
+      // ▲ ここまで #3219 の文
+      giftTitle: '診断した人だけのプレゼント',
+      giftText: 'あなたのタイプと\n自分の取り扱いがわかる解説BOOK', // さわさん指示 2026-10-01（あなただけの特別な冊子だと伝わるように）
+      whoName: 'あまのさわ｜「ラク生き」創始者',
+      whoText: '「頑張る」で人生を切り抜けてきた方たちへ。\n自分を活かして、自然体で楽しく生きる「ラク生き」を、糸島🏝️からオンラインでお伝えしています。',
+      avatarUrl: 'sawa-icon.jpg', // さわさんのアイコン（リザストのプロフィール画像 33421_iconimage.jpeg を同梱。外部URLだとプレビューで読めないため）。http〜 ならそのURLを使う
+      cta: '1分で診断してみる →',
+      ctaNote: 'タイプはその場で表示されます'
+    },
+    hint: '直感でOKです',
+    loadingText: 'タイプを診断中…',
+    resultLead: 'いまのわたしは…',
+    moreText: 'さらに',
+    lockedTitle: '詳しい結果と特別なプレゼントを\nメールでお届けします',
+    lockedTitleTag: '（完全無料）',
+    lockedItems: ['なぜこんなに疲れるのか', 'なぜ動きたいのに止まるのか', '私の場合、\nどうすればラクに動けるのか'], // 3つ目はさわさん指示 2026-10-01（「私の場合、」追加）。改行は「私の場合、」の後ろ（ぽち太さん指示 同日）
+    // 結果画面・登録ボタンの前に出す生徒さんの声（ぽち太さん指示 2026-10-01）。LINEのスクショからの切り抜き（全文ではない）。名前・アイコンは出さない
+    //  mark は黄色マーカーを引く部分（text の中の文字列）。who はタイプ（わかる人だけ）
+    studentVoices: {
+      title: '「ラク生き」受講生さんからも\n好評です！', // 生徒さん→受講生さん（さわさん指示 2026-10-01）
+      items: [
+        { text: '解説メールが思い当たりすぎて、\n個別のメッセージを\n読んでいるかのようでした😂', mark: '個別のメッセージを\n読んでいるかのよう', who: '気にしぃハリネズミタイプの受講生さん' },
+        { text: '解説メールがすごい‼️\n保存して何度か読み返してます✨', mark: '保存して何度か読み返してます', who: '受講生さん' },
+        { text: '「頭の中で処理し続けているから\n何もしてなくても消耗している」\n↓\n独り言でもいいから\nアウトプットして、\n頭の空きスペースつくろっかなぁ〜♪', mark: '何もしてなくても消耗している', who: 'やりたい疲れたアライグマタイプの受講生さん' }
+      ]
+    },
+    bookLead: 'プレゼント🎁',
+    bookNote: 'あなたのタイプに合わせた\n心とエネルギーの\n整え方ガイドブック',
+    registerCta: '詳しい結果を無料で受け取る →',
+    registerNote: 'お名前とメールアドレスだけ。1分で終わります。',
+    mockNotice: 'モックアップのため、登録ページはまだつながっていません',
+    placeholderText: 'イラスト差し替え予定',
+    fontsHref: 'https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&family=Yusei+Magic&display=swap',
+    imgBase: 'img/',
+    storageKey: 'energy3219mock'
+  };
+
+  var ART = {
+    // 仮枠に描くシルエット（人物＋光）。type ごとの色は currentColor
+    figure: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false" fill="currentColor"><circle cx="60" cy="40" r="17"/><path d="M28 104c2-22 15-36 32-36s30 14 32 36z"/><path d="M98 18l2.6 7.4L108 28l-7.4 2.6L98 38l-2.6-7.4L88 28l7.4-2.6z" opacity=".7"/><path d="M22 44l1.8 5.2L29 51l-5.2 1.8L22 58l-1.8-5.2L15 51l5.2-1.8z" opacity=".5"/></svg>',
+    sun: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="11" fill="#f5a35f"/><g stroke="#f0b26f" stroke-width="3" stroke-linecap="round"><path d="M32 6v8M32 50v8M6 32h8M50 32h8M13.6 13.6l5.7 5.7M44.7 44.7l5.7 5.7M13.6 50.4l5.7-5.7M44.7 19.3l5.7-5.7"/></g></svg>',
+    orn: '<svg class="en-mv-orn" viewBox="0 0 150 12" aria-hidden="true" focusable="false"><path d="M2 6h56M92 6h56" stroke="#d98a52" stroke-width="1.2"/><circle cx="75" cy="6" r="4.5" fill="none" stroke="#e0662a" stroke-width="1.4"/><circle cx="64" cy="6" r="1.8" fill="#e0662a"/><circle cx="86" cy="6" r="1.8" fill="#e0662a"/></svg>'
+  };
+
+  function ready(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  ready(function () {
+    var root = document.getElementById('energy-root');
+    if (!root || document.getElementById('energyApp')) return;
+    if (CONFIG.fontsHref && !document.querySelector('link[data-en-fonts]')) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet'; link.href = CONFIG.fontsHref; link.setAttribute('data-en-fonts', '');
+      document.head.appendChild(link);
+    }
+    var questions = CONFIG.questions, total = questions.length;
+    var answers = restore(total);
+    var app = document.createElement('div');
+    app.id = 'energyApp';
+    root.innerHTML = ''; root.appendChild(app);
+
+    var answered = answers.filter(function (a) { return a !== null; }).length;
+    if (answered === total) showResult(judge(), false);
+    else if (answered > 0) showQuestion(answers.indexOf(null));
+    else showIntro();
+
+    // プレビュー（モックアップ確認用）から4タイプの結果を直接開けるように
+    window.EnergyApp = {
+      showType: function (i) { showResult(CONFIG.types[i], false); },
+      restart: function () { answers = answers.map(function () { return null; }); save(); showIntro(); scrollToApp(); }
+    };
+
+    function judge() {
+      var s = answers.reduce(function (acc, j, i) { var p = CONFIG.scores[i][j]; return [acc[0] + p[0], acc[1] + p[1]]; }, [0, 0]);
+      var hss = s[0] >= CONFIG.threshold.hss, hsp = s[1] >= CONFIG.threshold.hsp;
+      return CONFIG.types.filter(function (t) { return t.hss === hss && t.hsp === hsp; })[0];
+    }
+
+    function nl(s) { return esc(s).replace(/\n/g, '<br>'); }
+    function plain(s) { return s.replace(/<wbr>/g, ''); }
+    function placeholder(t, cls, withTag, blur) {
+      return '<div class="en-ph ' + cls + '" style="color:' + esc(darken(t.bg)) + '">' + ART.figure +
+        (blur ? '<span class="en-ph-q" aria-hidden="true">?</span>' : '') +
+        (withTag ? '<span class="en-ph-tag">' + esc(CONFIG.placeholderText) + '</span>' : '') + '</div>';
+    }
+    // プレゼントの解説本を「本」の装丁で（表紙は今の画像そのまま。厚み＝ページの小口＋背の折り目）
+    function book3d(t, w) {
+      return '<span class="en-book3d" style="--bw:' + w + 'px"><span class="en-book3d-in">' +
+        '<img src="' + esc(CONFIG.imgBase + t.book) + '" alt="' + esc(t.bookTitle) + '" decoding="async"></span></span>';
+    }
+    function typeArt(t) {
+      return t.img
+        ? '<img src="' + esc(CONFIG.imgBase + t.img) + '" alt="' + esc(plain(t.name) + '（' + t.label + '）') + '" width="714" height="535" decoding="async">'
+        : placeholder(t, '', true, false);
+    }
+
+    function showIntro() {
+      var I = CONFIG.intro;
+      var hero = I.heroImage
+        ? '<section class="en-mv-img"><img src="' + esc(CONFIG.imgBase + I.heroImage) + '" alt="' + esc(I.kicker + ' ' + I.title.replace(/\n/g, '')) + '"></section>'
+        : '<section class="en-mv"><p class="en-mv-kicker">' + esc(I.kicker) + '</p><p class="en-mv-title">' + nl(I.title) + '</p>' + ART.orn +
+          '<p class="en-mv-sub2">' + esc(I.sub) + '</p></section>';
+      app.innerHTML = '<div class="en-screen">' + hero +
+        '<section class="en-hero"><div class="en-chips">' +
+        I.chips.map(function (c, i) { return '<span class="en-chip' + (i === 0 ? ' is-free' : '') + '">' + esc(c) + '</span>'; }).join('') + '</div></section>' +
+        '<section class="en-voices"><p class="en-sec">' + esc(I.voicesTitle) + '</p>' +
+        I.voices.map(function (v, i) { return '<div class="en-bubble' + (i % 2 ? ' is-r' : '') + '">' + esc(v) + '</div>'; }).join('') +
+        '</section>' +
+        '<section class="en-explain"><p>' + esc(I.voicesAfter) + '</p></section>' +
+        '<div class="en-aha">' + I.aha + '</div>' + // aha は <b> を含む固定文（CONFIG内）なのでエスケープしない
+        '<section class="en-explain"><p>' + esc(I.explainLead) + '</p><ul>' + I.explainList.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+        '<p>' + esc(I.explainMid) + '</p><p class="en-big">' + esc(I.explainBig) + '</p><p>' + esc(I.explainTail) + '</p>' +
+        '<div class="en-conc"><p>' + esc(I.conc) + '</p><p class="en-big">' + esc(I.concBig) + '</p></div></section>' +
+        '<section><p class="en-sec">' + esc(I.typesTitle) + '</p><div class="en-types">' +
+        CONFIG.types.map(function (t, i) {
+          var blur = [].concat(I.blurIndex).indexOf(i) >= 0;
+          return '<div class="en-tcard' + (blur ? ' is-blur' : '') + '" style="--type-bg:' + esc(t.bg) + '">' +
+            (t.face ? '<div class="en-face"><div class="en-face-img" style="background-image:url(' + esc(CONFIG.imgBase + t.face) + ')"></div>' +
+              (blur ? '<span class="en-ph-q" aria-hidden="true">?</span>' : '') + '</div>' : placeholder(t, 'en-ph-dot', false, blur)) +
+            '<b>' + (blur ? '？？？タイプ' : t.name.replace('<wbr>', '<br>')) + '</b></div>';
+        }).join('') + '</div><p class="en-types-note">' + esc(I.typesNote) + '</p></section>' +
+        '<section class="en-locked"><p class="en-sec">' + esc(I.learnTitle) + '</p>' +
+        I.learnList.map(function (x) { return '<div class="en-lock">' + ART.sun.replace('<svg ', '<svg width="18" height="18" ') + '<span>' + esc(x) + '</span></div>'; }).join('') +
+        '<p class="en-note">' + esc(I.learnNote) + '</p></section>' +
+        '<section class="en-gift" style="flex-direction:column;align-items:stretch;text-align:center"><b>' + esc(I.giftTitle) + '</b>' +
+        '<div class="en-books">' + CONFIG.types.map(function (t) { return book3d(t, 66); }).join('') + '</div>' +
+        '<span>' + esc(I.giftText) + '</span></section>' +
+        '<section class="en-who"><div class="en-avatar">' + ART.sun + '</div><div><b>' + esc(I.whoName) + '</b><p>' + esc(I.whoText) + '</p></div></section>' +
+        '<div class="en-cta"><button type="button" class="en-btn" id="enStart">' + esc(I.cta) + '</button><small>' + esc(I.ctaNote) + '</small></div>' +
+        '</div>';
+      if (I.avatarUrl) {
+        var img = new Image();
+        img.alt = 'あまのさわ';
+        img.onload = function () { var av = app.querySelector('.en-avatar'); if (av) { av.textContent = ''; av.appendChild(img); } };
+        img.src = /^https?:/.test(I.avatarUrl) ? I.avatarUrl : CONFIG.imgBase + I.avatarUrl;
+      }
+      app.querySelector('#enStart').addEventListener('click', function () { showQuestion(0); });
+    }
+
+    function showQuestion(i) {
+      var q = questions[i], steps = '';
+      for (var s = 0; s < total; s++) steps += '<i class="' + (s < i ? 'is-done' : s === i ? 'is-now' : '') + '"></i>';
+      app.innerHTML = '<div class="en-screen">' +
+        '<div class="en-qbar"><button type="button" class="en-back" aria-label="前に戻る"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>' +
+        '<div class="en-steps" aria-hidden="true">' + steps + '</div><span class="en-count">' + (i + 1) + ' / ' + total + '</span></div>' +
+        '<div class="en-qcard"><div class="en-q"><span class="en-qno">Q' + (i + 1) + '</span><p class="en-qtext">' + esc(q.text) + '</p></div>' +
+        '<div class="en-choices">' +
+        q.choices.map(function (c, j) {
+          return '<button type="button" class="en-choice' + (answers[i] === j ? ' is-selected' : '') + '" data-j="' + j +
+            '"><span class="en-dot"></span><span>' + esc(c) + '</span></button>';
+        }).join('') +
+        '</div></div><p class="en-hint">' + esc(CONFIG.hint) + '</p></div>';
+
+      var locked = false;
+      Array.prototype.forEach.call(app.querySelectorAll('.en-choice'), function (btn) {
+        btn.addEventListener('click', function () {
+          if (locked) return;
+          locked = true;
+          answers[i] = +btn.getAttribute('data-j');
+          save();
+          Array.prototype.forEach.call(app.querySelectorAll('.en-choice'), function (b) { b.classList.remove('is-selected'); });
+          btn.classList.add('is-selected');
+          setTimeout(function () {
+            if (i + 1 < total) showQuestion(i + 1); else showResult(judge(), true);
+          }, 320);
+        });
+      });
+      app.querySelector('.en-back').addEventListener('click', function () {
+        if (i > 0) showQuestion(i - 1); else showIntro();
+        scrollToApp();
+      });
+      scrollToApp();
+    }
+
+    function studentVoices() {
+      var V = CONFIG.studentVoices;
+      if (!V || !V.items.length) return '';
+      return '<section class="en-voice"><p class="en-voice-title">' + nl(V.title) + '</p>' +
+        V.items.map(function (v) {
+          var body = esc(v.text);
+          if (v.mark) body = body.replace(esc(v.mark), '<span class="en-mk">' + esc(v.mark) + '</span>');
+          return '<figure class="en-vcard"><blockquote>' + body + '</blockquote><figcaption>' + esc(v.who) + '</figcaption></figure>';
+        }).join('') + '</section>';
+    }
+
+    function showResult(type, withLoading) {
+      if (withLoading) {
+        app.innerHTML = '<div class="en-screen en-loading"><div class="en-breath">' + ART.sun + '</div><p>' + esc(CONFIG.loadingText) + '</p></div>';
+        scrollToApp();
+        setTimeout(function () { showResult(type, false); }, 1400);
+        return;
+      }
+      var lock = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b9561f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+      var href = type.registerUrl || '#';
+      app.innerHTML = '<div class="en-screen">' +
+        '<section class="en-result" style="--type-bg:' + esc(type.bg) + '"><div class="en-chips"><span class="en-chip is-free">診断結果</span></div>' +
+        '<p class="en-result-lead">' + esc(CONFIG.resultLead) + '</p>' +
+        '<div class="en-art' + (type.img ? ' is-img' : '') + '">' + typeArt(type) + '</div>' +
+        '<p class="en-catch">' + nl(type.catch) + '</p>' +
+        (type.img ? '<p class="en-type-label">' + esc(type.label) + '</p>' // タイプ名はイラスト内に描かれている（alt に保持）。解説本の表記だけサブで添える（ぽち太さん指示 2026-10-01）
+          : '<p class="en-type">' + type.name + '<small>' + esc(type.label) + '</small></p>') + // name は <wbr> を含む固定文（CONFIG内）
+        '<div class="en-bubble">' + esc(type.hook) + '</div></section>' +
+        '<div class="en-more"><span>' + esc(CONFIG.moreText) + '</span></div>' +
+        '<section class="en-locked"><p class="en-sec">' + nl(CONFIG.lockedTitle) + (CONFIG.lockedTitleTag ? '<br><span class="en-nb">' + esc(CONFIG.lockedTitleTag) + '</span>' : '') + '</p>' +
+        CONFIG.lockedItems.map(function (t) { return '<div class="en-lock">' + lock + '<span>' + esc(t) + '</span></div>'; }).join('') +
+        '<div class="en-book">' + book3d(type, 92) + '<div><b>' + esc(CONFIG.bookLead) + '</b><span>' + esc(CONFIG.bookNote) + '</span></div></div>' +
+        '</section>' + studentVoices() +
+        '<div class="en-cta is-static"><a class="en-btn" href="' + esc(href) + '">' + esc(CONFIG.registerCta) + '</a><small>' + esc(CONFIG.registerNote) + '</small></div>' +
+        '<button type="button" class="en-retry">もう一度診断する</button></div>';
+
+      var reg = app.querySelector('.en-cta.is-static .en-btn');
+      var bar = document.createElement('div');
+      bar.className = 'en-sticky';
+      bar.innerHTML = '<a class="en-btn" href="' + esc(href) + '">' + esc(CONFIG.registerCta) + '</a>';
+      app.appendChild(bar);
+      app.querySelector('.en-screen').classList.add('has-sticky');
+      if (!type.registerUrl) {
+        var toast = document.createElement('div');
+        toast.className = 'en-toast'; toast.textContent = CONFIG.mockNotice;
+        app.appendChild(toast);
+        Array.prototype.forEach.call(app.querySelectorAll('.en-btn'), function (a) {
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            toast.classList.add('on');
+            clearTimeout(toast._t); toast._t = setTimeout(function () { toast.classList.remove('on'); }, 2400);
+          });
+        });
+      }
+      var syncBar = function () {
+        if (!bar.isConnected) { window.removeEventListener('scroll', syncBar); window.removeEventListener('resize', syncBar); return; }
+        var r = reg.getBoundingClientRect();
+        bar.classList.toggle('is-hidden', r.top < window.innerHeight && r.bottom > 0);
+      };
+      window.addEventListener('scroll', syncBar, { passive: true });
+      window.addEventListener('resize', syncBar);
+      syncBar();
+      app.querySelector('.en-retry').addEventListener('click', function () {
+        answers = answers.map(function () { return null; });
+        save();
+        showQuestion(0);
+      });
+      scrollToApp();
+    }
+
+    function scrollToApp() {
+      var rect = root.getBoundingClientRect();
+      if (rect.top < 0 || rect.top > 140) {
+        var top = rect.top + window.pageYOffset - 20;
+        try { window.scrollTo({ top: top, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, top); }
+      }
+    }
+    function save() {
+      try { sessionStorage.setItem(CONFIG.storageKey, JSON.stringify(answers)); } catch (e) {}
+    }
+  });
+
+  function restore(n) {
+    var empty = []; for (var i = 0; i < n; i++) empty.push(null);
+    try {
+      var a = JSON.parse(sessionStorage.getItem(CONFIG.storageKey) || 'null');
+      if (Array.isArray(a) && a.length === n && a.every(function (v, i) {
+        return v === null || (typeof v === 'number' && v >= 0 && v < CONFIG.scores[i].length);
+      })) return a;
+    } catch (e) {}
+    return empty;
+  }
+  // 仮枠のシルエット色：タイプの地色を濃くした色
+  function darken(hex) {
+    var m = /^#([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return '#b9561f';
+    var n = parseInt(m[1], 16), f = .55;
+    var r = Math.round(((n >> 16) & 255) * f), g = Math.round(((n >> 8) & 255) * f), b = Math.round((n & 255) * f);
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+})();
+</script>
+</body>
+</html>
