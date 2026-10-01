@@ -346,7 +346,6 @@ body.en-immersive .freetextSec { display: none !important; }
    ▼ モックアップの段階で「仮」のもの（本番前に差し替える）
    - タイプ別イラスト … 仮枠（CONFIG.types[].img が空なら仮枠を描く。画像を入れたら自動でそちらを表示）
    - タイプ名 … 解説本の本文から仮に付けた名前（さわさんに決めてもらう）
-   - 配点・判定 … 仮（リザスト #3219 の「質問と回答と点数の設定」「合計得点と答えの編集」が見えていないため）
    - 登録先 … 未接続（registerUrl が空ならボタンは案内を出すだけ）
    設問・入り口の文章はリザスト #3219 の公開ページの文（さわさん本人の文）をそのまま使っている */
 (function () {
@@ -361,39 +360,39 @@ body.en-immersive .freetextSec { display: none !important; }
       { text: '新しいことへの挑戦について', choices: ['好奇心が強く、どんどん試したい', '準備してから挑戦する', '変化は苦手で避けがち'] },
       { text: '理想の休日の過ごし方は？', choices: ['予定がある方が楽しいし、いくつか入れたい', '予定は1つくらいにして、あとはゆっくりしたい', '予定はなるべく入れず、静かに過ごしたい'] }
     ],
-    // 【仮】配点。選択肢ごとに [好奇心（HSS）, 感じ取りやすさ（HSP）] の2軸で加点し、しきい値以上を「＋」とする
-    //  本番はリザスト #3219 の配点・判定に合わせて差し替える（リザストが合計点1本で判定している場合は min 方式に戻す）
+    // 配点・判定はリザスト #3219 と同じ（2026-10-02 管理画面で確認）。全問 回答1＝20／回答2＝15／回答3＝10 の合計（50〜100点）で、
+    // types[].min 以上のうち最も高いタイプ（85↑ハリネズミ／70↑アライグマ／60↑カワウソ／50↑ビーバー）
     scores: [
-      [[2, 0], [1, 1], [0, 1]],
-      [[1, 1], [0, 0], [0, 2]],
-      [[0, 2], [0, 1], [0, 0]],
-      [[2, 0], [1, 0], [0, 0]],
-      [[2, 0], [1, 1], [0, 1]]
+      [20, 15, 10],
+      [20, 15, 10],
+      [20, 15, 10],
+      [20, 15, 10],
+      [20, 15, 10]
     ],
-    threshold: { hss: 4, hsp: 3 },
-    // 4タイプ。hss/hsp は判定（true＝＋）。name＝動物のタイプ名（さわさん×ぽち太さん決定 2026-10-01）。label＝解説本の表記（結果画面にだけサブで出す）。catch と hook は解説本（さわさん本人の文）から引用
+    // 4タイプ。min＝判定の下限点（#3219と同じ）。name＝動物のタイプ名（さわさん×ぽち太さん決定 2026-10-01）。label＝解説本の表記（結果画面にだけサブで出す）。catch と hook は解説本（さわさん本人の文）から引用
     // img＝結果画面のイラスト（さわさん提供のタイプ別カード画像を4分割・714×535前後。タイプ名入り）。空なら仮枠
     // face＝入り口カードの丸窓（さわさん提供の4分割イラストから顔まわりを正方形に切り抜き）。bg＝イラストの地色
     // book はプレゼントの解説本の表紙（統一版20260723 の表紙を縮小）
-    // registerUrl＝既存のタイプ別ステップメール「エネルギー消耗タイプ診断｜HSS（±）×HSP（±）」の登録ページ（限定公開。2026-10-02 つなぎ込み）
-    //   #363034 HSS＋HSP＋／#363041 HSS＋HSP－／#363040 HSS－HSP＋／#363042 HSS－HSP－。数値IDのURLは限定公開のため404 → ハッシュID形式を使う（スマホ・PCとも200を確認）
+    // registerUrl＝タイプ別リザスト多目的ページ（限定公開・2026-10-02作成。ゆとり診断 #162335 と同じ方式）
+    //   申込完了メール＝#3219 の結果本文＋結果後の文章（1通・本人確認メールなし）／申込完了時に自動登録＝タイプ別ステメ（終了後は #363720 へ）
+    //   #162982 ハリネズミ→#363034／#162983 カワウソ→#363041／#162984 アライグマ→#363040／#162985 ビーバー→#363042
     types: [
-      { key: 'hss-hsp', hss: true, hsp: true, label: 'HSS型HSP', name: '気にしぃ<wbr>ハリネズミタイプ', img: 'type-hss-hsp.jpg', face: 'face-hss-hsp.jpg', bg: '#fdeee6',
+      { key: 'hss-hsp', min: 85, label: 'HSS型HSP', name: '気にしぃ<wbr>ハリネズミタイプ', img: 'type-hss-hsp.jpg', face: 'face-hss-hsp.jpg', bg: '#fdeee6',
         catch: '強い好奇心と繊細な感性をあわせ持つあなたへ',
         hook: 'まだ朝なのに、\n気持ちだけ全力疾走しはじめる。\nなのに\nカラダが、追いつかない。',
-        book: 'book-hss-hsp.jpg', bookTitle: 'HSS型HSP解説本', registerUrl: 'https://www.reservestock.jp/subscribe/NzBkYjc3NGJjM' },
-      { key: 'hss', hss: true, hsp: false, label: 'HSS', name: '即GO<wbr>カワウソタイプ', img: 'type-hss.jpg', face: 'face-hss.jpg', bg: '#e8f5fc',
+        book: 'book-hss-hsp.jpg', bookTitle: 'HSS型HSP解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OTk4MmUyNzM0Z' },
+      { key: 'hss', min: 60, label: 'HSS', name: '即GO<wbr>カワウソタイプ', img: 'type-hss.jpg', face: 'face-hss.jpg', bg: '#e8f5fc',
         catch: 'やりたい気持ちは強いのに、\nなぜか続かなくなるあなたへ',
         hook: '勢いが乗ると、\n一気に行動できたりもする。\n\nでも\nしばらくすると、\n急に止まる。',
-        book: 'book-hss.jpg', bookTitle: 'HSS解説本', registerUrl: 'https://www.reservestock.jp/subscribe/MTNlZWViZTI0O' },
-      { key: 'hsp', hss: false, hsp: true, label: 'HSP', name: 'やりたい疲れた<wbr>アライグマタイプ', img: 'type-hsp.jpg', face: 'face-hsp.jpg', bg: '#e3f0df',
+        book: 'book-hss.jpg', bookTitle: 'HSS解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OWY3NjUxZWM4N' },
+      { key: 'hsp', min: 70, label: 'HSP', name: 'やりたい疲れた<wbr>アライグマタイプ', img: 'type-hsp.jpg', face: 'face-hsp.jpg', bg: '#e3f0df',
         catch: '周りの空気や人の気持ちを、\n深く感じ取ってしまうあなたへ',
         hook: '家族の空気。\n相手の機嫌。\n職場の雰囲気。\nLINEの文章の裏の意図。\n\nそういうものを、\n無意識で受け取り続けてる。',
-        book: 'book-hsp.jpg', bookTitle: 'HSP解説本', registerUrl: 'https://www.reservestock.jp/subscribe/MWVjMTU4MTY2N' },
-      { key: 'ganbari', hss: false, hsp: false, label: '頑張り屋さん', name: '全部やっとく<wbr>ビーバータイプ', img: 'type-ganbari.jpg', face: 'face-ganbari.jpg', bg: '#fdefcb',
+        book: 'book-hsp.jpg', bookTitle: 'HSP解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OWRlOTk2NGZiN' },
+      { key: 'ganbari', min: 50, label: '頑張り屋さん', name: '全部やっとく<wbr>ビーバータイプ', img: 'type-ganbari.jpg', face: 'face-ganbari.jpg', bg: '#fdefcb',
         catch: '休んでも、なんだか疲れが抜けないあなたへ',
         hook: '「ちゃんと休んでるはずなのに、\nなんかずっと疲れてる…」\n\nカラダは止まってるのに、\n気持ちが休まらない。',
-        book: 'book-ganbari.jpg', bookTitle: '頑張り屋さん解説本', registerUrl: 'https://www.reservestock.jp/subscribe/YTJhZTI2OWJhM' }
+        book: 'book-ganbari.jpg', bookTitle: '頑張り屋さん解説本', registerUrl: 'https://www.reservestock.jp/inquiry/ZjgwMDg5MTNhY' }
     ],
     intro: {
       heroImage: 'hero.jpg', // 冒頭のキャッチ画像（さわさん提供 2026-10-01・1200×800）。空ならコードで再現したヒーロー
@@ -499,9 +498,9 @@ body.en-immersive .freetextSec { display: none !important; }
     };
 
     function judge() {
-      var s = answers.reduce(function (acc, j, i) { var p = CONFIG.scores[i][j]; return [acc[0] + p[0], acc[1] + p[1]]; }, [0, 0]);
-      var hss = s[0] >= CONFIG.threshold.hss, hsp = s[1] >= CONFIG.threshold.hsp;
-      return CONFIG.types.filter(function (t) { return t.hss === hss && t.hsp === hsp; })[0];
+      var total = answers.reduce(function (sum, j, i) { return sum + CONFIG.scores[i][j]; }, 0);
+      return CONFIG.types.slice().sort(function (a, b) { return b.min - a.min; }).filter(function (t) { return total >= t.min; })[0] ||
+        CONFIG.types.slice().sort(function (a, b) { return a.min - b.min; })[0];
     }
 
     function nl(s) { return esc(s).replace(/\n/g, '<br>'); }
