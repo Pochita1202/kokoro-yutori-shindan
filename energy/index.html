@@ -380,19 +380,19 @@ body.en-immersive .freetextSec { display: none !important; }
     //   リザスト各フォームの「アクセス解析 → 流入元別リンク」に「診断アプリ_ぽち太リスト」として集計（2026-10-07 発行）
     //   流入元を増やす時は、4フォームそれぞれで流入元別リンクを発行し track.<名前> に入れて ?src=<名前> で配る
     types: [
-      { key: 'hss-hsp', track: { pochita: '9052351dd960f508', threads: '58f3884add47a3b7' }, min: 85, label: 'HSS型HSP', name: '気にしぃ<wbr>ハリネズミタイプ', img: 'type-hss-hsp.jpg', face: 'face-hss-hsp.jpg', bg: '#fdeee6',
+      { key: 'hss-hsp', track: { pochita: '9052351dd960f508', threads: '58f3884add47a3b7', facebook: '48d30b9002b57029' }, min: 85, label: 'HSS型HSP', name: '気にしぃ<wbr>ハリネズミタイプ', img: 'type-hss-hsp.jpg', face: 'face-hss-hsp.jpg', bg: '#fdeee6',
         catch: '強い好奇心と繊細な感性をあわせ持つあなたへ',
         hook: 'まだ朝なのに、\n気持ちだけ全力疾走しはじめる。\nなのに\nカラダが、追いつかない。',
         book: 'book-hss-hsp.jpg', bookTitle: 'HSS型HSP解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OTk4MmUyNzM0Z' },
-      { key: 'hss', track: { pochita: 'b34f405e4f627e38', threads: '48b340afd84d2c98' }, min: 60, label: 'HSS', name: '即GO<wbr>カワウソタイプ', img: 'type-hss.jpg', face: 'face-hss.jpg', bg: '#e8f5fc',
+      { key: 'hss', track: { pochita: 'b34f405e4f627e38', threads: '48b340afd84d2c98', facebook: 'b0fa061e9bac9dca' }, min: 60, label: 'HSS', name: '即GO<wbr>カワウソタイプ', img: 'type-hss.jpg', face: 'face-hss.jpg', bg: '#e8f5fc',
         catch: 'やりたい気持ちは強いのに、\nなぜか続かなくなるあなたへ',
         hook: '勢いが乗ると、\n一気に行動できたりもする。\n\nでも\nしばらくすると、\n急に止まる。',
         book: 'book-hss.jpg', bookTitle: 'HSS解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OWY3NjUxZWM4N' },
-      { key: 'hsp', track: { pochita: '9c77afad142d4c52', threads: '41cdb7c1b84b26dd' }, min: 70, label: 'HSP', name: 'やりたい疲れた<wbr>アライグマタイプ', img: 'type-hsp.jpg', face: 'face-hsp.jpg', bg: '#e3f0df',
+      { key: 'hsp', track: { pochita: '9c77afad142d4c52', threads: '41cdb7c1b84b26dd', facebook: '60e6454af32f3b38' }, min: 70, label: 'HSP', name: 'やりたい疲れた<wbr>アライグマタイプ', img: 'type-hsp.jpg', face: 'face-hsp.jpg', bg: '#e3f0df',
         catch: '周りの空気や人の気持ちを、\n深く感じ取ってしまうあなたへ',
         hook: '家族の空気。\n相手の機嫌。\n職場の雰囲気。\nLINEの文章の裏の意図。\n\nそういうものを、\n無意識で受け取り続けてる。',
         book: 'book-hsp.jpg', bookTitle: 'HSP解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OWRlOTk2NGZiN' },
-      { key: 'ganbari', track: { pochita: '3f7cd1052d8d9c9d', threads: '65af235ba94051eb' }, min: 50, label: '頑張り屋さん', name: '全部やっとく<wbr>ビーバータイプ', img: 'type-ganbari.jpg', face: 'face-ganbari.jpg', bg: '#fdefcb',
+      { key: 'ganbari', track: { pochita: '3f7cd1052d8d9c9d', threads: '65af235ba94051eb', facebook: '18ae96d20be94e7c' }, min: 50, label: '頑張り屋さん', name: '全部やっとく<wbr>ビーバータイプ', img: 'type-ganbari.jpg', face: 'face-ganbari.jpg', bg: '#fdefcb',
         catch: '休んでも、なんだか疲れが抜けないあなたへ',
         hook: '「ちゃんと休んでるはずなのに、\nなんかずっと疲れてる…」\n\nカラダは止まってるのに、\n気持ちが休まらない。',
         book: 'book-ganbari.jpg', bookTitle: '頑張り屋さん解説本', registerUrl: 'https://www.reservestock.jp/inquiry/ZjgwMDg5MTNhY' }
@@ -460,8 +460,34 @@ body.en-immersive .freetextSec { display: none !important; }
     placeholderText: 'イラスト差し替え予定',
     fontsHref: 'https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;700&family=Noto+Serif+JP:wght@700&family=Yusei+Magic&display=swap',
     imgBase: 'img/',
-    storageKey: 'energy3219mock'
+    storageKey: 'energy3219mock',
+    // ▼ Meta（Facebook/Instagram広告）ピクセル。ゆとり診断と同じデータセットを使う（広告の最適化イベント＝Lead を共通にするため）。本番（shindan.lpsub.site）でだけ動く
+    //    送るイベント：PageView／DiagnosisStart（スタート押下）／DiagnosisComplete（結果表示・type付き）／Lead（登録ボタン押下）
+    //    ゆとり診断と区別できるよう、カスタムイベント・Lead には content_category / diagnosis: 'energy' を付ける（2026-10-22 広告2本体制のため追加）
+    metaPixelId: '4533138067013581', // データセット「さわ_診断アプリ」
+    metaPixelHost: 'shindan.lpsub.site'
   };
+
+  // Metaピクセル：ID未設定・本番ドメイン以外（プレビュー等）では読み込まない
+  var px = (function () {
+    var id = CONFIG.metaPixelId, on = false;
+    try { on = !!id && location.hostname === CONFIG.metaPixelHost; } catch (e) {}
+    if (on && !window.fbq) {
+      var n = window.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+      if (!window._fbq) window._fbq = n;
+      n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+      var sc = document.createElement('script'); sc.async = true; sc.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      (document.head || document.documentElement).appendChild(sc);
+      window.fbq('init', id);
+      window.fbq('track', 'PageView');
+    }
+    return function (name, params, custom) {
+      if (!on || !window.fbq) return;
+      params = params || {};
+      params.diagnosis = 'energy';
+      try { window.fbq(custom ? 'trackCustom' : 'track', name, params); } catch (e) {}
+    };
+  })();
 
   var ART = {
     // 仮枠に描くシルエット（人物＋光）。type ごとの色は currentColor
@@ -514,6 +540,7 @@ body.en-immersive .freetextSec { display: none !important; }
     app.id = 'energyApp';
     root.innerHTML = ''; root.appendChild(app);
 
+    var resultTracked = false; // DiagnosisComplete はページ表示ごとに1回だけ送る
     var answered = answers.filter(function (a) { return a !== null; }).length;
     if (answered === total) showResult(judge(), false);
     else if (answered > 0) showQuestion(answers.indexOf(null));
@@ -589,7 +616,7 @@ body.en-immersive .freetextSec { display: none !important; }
         img.onload = function () { var av = app.querySelector('.en-avatar'); if (av) { av.textContent = ''; av.appendChild(img); } };
         img.src = /^https?:/.test(I.avatarUrl) ? I.avatarUrl : CONFIG.imgBase + I.avatarUrl;
       }
-      app.querySelector('#enStart').addEventListener('click', function () { showQuestion(0); });
+      app.querySelector('#enStart').addEventListener('click', function () { px('DiagnosisStart', {}, true); showQuestion(0); });
     }
 
     function showQuestion(i) {
@@ -668,6 +695,10 @@ body.en-immersive .freetextSec { display: none !important; }
       bar.className = 'en-sticky';
       bar.innerHTML = '<a class="en-btn" href="' + esc(href) + '">' + esc(CONFIG.registerCta) + '</a>';
       app.appendChild(bar);
+      var typeLabel = plain(type.name);
+      if (!resultTracked) { resultTracked = true; px('DiagnosisComplete', { content_name: typeLabel }, true); }
+      reg.addEventListener('click', function () { px('Lead', { content_name: typeLabel, content_category: 'energy-inline' }); });
+      bar.querySelector('a').addEventListener('click', function () { px('Lead', { content_name: typeLabel, content_category: 'energy-sticky' }); });
       app.querySelector('.en-screen').classList.add('has-sticky');
       if (!type.registerUrl) {
         var toast = document.createElement('div');
