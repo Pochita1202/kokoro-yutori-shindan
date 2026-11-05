@@ -394,18 +394,22 @@ body.en-immersive .freetextSec { display: none !important; }
       { key: 'hss-hsp', track: { pochita: '9052351dd960f508', threads: '58f3884add47a3b7', facebook: '48d30b9002b57029', note: '88f2b0a43683cb9b', notelink: 'a260dc204f1d2dc0', notebanner: '4f68f891016d05b4' }, min: 85, label: 'HSS型HSP', name: '気にしぃ<wbr>ハリネズミタイプ', img: 'type-hss-hsp.jpg', face: 'face-hss-hsp.jpg', bg: '#fdeee6',
         catch: '強い好奇心と繊細な感性をあわせ持つあなたへ',
         hook: 'まだ朝なのに、\n気持ちだけ全力疾走しはじめる。\nなのに\nカラダが、追いつかない。',
+        short: 'ハリネズミタイプ', locked: ['「休んだはずなのに疲れてる」の正体', '「楽しみ！」なのに、近づくほど苦しくなる'],
         book: 'book-hss-hsp.jpg', bookTitle: 'HSS型HSP解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OTk4MmUyNzM0Z' },
       { key: 'hss', track: { pochita: 'b34f405e4f627e38', threads: '48b340afd84d2c98', facebook: 'b0fa061e9bac9dca', note: 'ee804e4f6086b2d1', notelink: 'bafe0e1f623e6ee0', notebanner: '6c0f47bdcb0469da' }, min: 60, label: 'HSS', name: '即GO<wbr>カワウソタイプ', img: 'type-hss.jpg', face: 'face-hss.jpg', bg: '#e8f5fc',
         catch: 'やりたい気持ちは強いのに、\nなぜか続かなくなるあなたへ',
         hook: '勢いが乗ると、\n一気に行動できたりもする。\n\nでも\nしばらくすると、\n急に止まる。',
+        short: 'カワウソタイプ', locked: ['やりたいことが渋滞すると、急に全部止まる', '「毎日同じ」が続くと、急に息が詰まる'],
         book: 'book-hss.jpg', bookTitle: 'HSS解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OWY3NjUxZWM4N' },
       { key: 'hsp', track: { pochita: '9c77afad142d4c52', threads: '41cdb7c1b84b26dd', facebook: '60e6454af32f3b38', note: 'bf88f7f64c855ceb', notelink: '791322946b69243a', notebanner: '5fd0016675aef9bb' }, min: 70, label: 'HSP', name: 'やりたい疲れた<wbr>アライグマタイプ', img: 'type-hsp.jpg', face: 'face-hsp.jpg', bg: '#e3f0df',
         catch: '周りの空気や人の気持ちを、\n深く感じ取ってしまうあなたへ',
         hook: '家族の空気。\n相手の機嫌。\n職場の雰囲気。\nLINEの文章の裏の意図。\n\nそういうものを、\n無意識で受け取り続けてる。',
+        short: 'アライグマタイプ', locked: ['「何もしてないのに疲れる日」がある', '返信ひとつに、ものすごくエネルギーを使ってしまう'],
         book: 'book-hsp.jpg', bookTitle: 'HSP解説本', registerUrl: 'https://www.reservestock.jp/inquiry/OWRlOTk2NGZiN' },
       { key: 'ganbari', track: { pochita: '3f7cd1052d8d9c9d', threads: '65af235ba94051eb', facebook: '18ae96d20be94e7c', note: '5124774dd27fe934', notelink: '3d551b0752aecb4d', notebanner: '7c4cf7281f2f8574' }, min: 50, label: '頑張り屋さん', name: '全部やっとく<wbr>ビーバータイプ', img: 'type-ganbari.jpg', face: 'face-ganbari.jpg', bg: '#fdefcb',
         catch: '休んでも、なんだか疲れが抜けないあなたへ',
         hook: '「ちゃんと休んでるはずなのに、\nなんかずっと疲れてる…」\n\nカラダは止まってるのに、\n気持ちが休まらない。',
+        short: 'ビーバータイプ', locked: ['なんか疲れが抜けない…', '気づいたら、"頑張る基準"が高くなってた'],
         book: 'book-ganbari.jpg', bookTitle: '頑張り屋さん解説本', registerUrl: 'https://www.reservestock.jp/inquiry/ZjgwMDg5MTNhY' }
     ],
     intro: {
@@ -450,9 +454,10 @@ body.en-immersive .freetextSec { display: none !important; }
     loadingText: 'タイプを診断中…',
     resultLead: 'いまのわたしは…',
     moreText: 'さらに',
+    // ▼ 2026-11-04 広告第4弾に向けた結果画面の改善（11/1提案②）。ロック項目の1・2つ目はタイプ別（types[].locked＝解説本の章タイトル）、3つ目は共通（さわさん指示の文）
     lockedTitle: '詳しい結果と特別なプレゼントを\nメールでお届けします',
     lockedTitleTag: '（完全無料）',
-    lockedItems: ['なぜこんなに疲れるのか', 'なぜ動きたいのに止まるのか', '私の場合、\nどうすればラクに動けるのか'], // 3つ目はさわさん指示 2026-10-01（「私の場合、」追加）。改行は「私の場合、」の後ろ（ぽち太さん指示 同日）
+    lockedItems: ['なぜこんなに疲れるのか', 'なぜ動きたいのに止まるのか', '私の場合、\nどうすればラクに動けるのか'], // types[].locked が無いときの予備。3つ目はさわさん指示 2026-10-01（「私の場合、」追加）。改行は「私の場合、」の後ろ（ぽち太さん指示 同日）
     // 結果画面・登録ボタンの前に出す生徒さんの声（ぽち太さん指示 2026-10-01）。LINEのスクショからの切り抜き（全文ではない）。名前・アイコンは出さない
     //  mark は黄色マーカーを引く部分（text の中の文字列）。who はタイプ（わかる人だけ）
     studentVoices: {
@@ -464,8 +469,9 @@ body.en-immersive .freetextSec { display: none !important; }
       ]
     },
     bookLead: 'プレゼント🎁',
-    bookNote: 'あなたのタイプに合わせた\n心とエネルギーの\n整え方ガイドブック',
-    registerCta: '詳しい結果を無料で受け取る →',
+    bookNote: 'あなたのタイプと\n自分の取り扱いがわかる\n解説BOOK', // 2026-11-04 呼び方を「解説BOOK」に統一（広告・入り口・登録ページと同じ。入り口のさわさん指示の文）
+    // bookNote（旧）: 'あなたのタイプに合わせた\n心とエネルギーの\n整え方ガイドブック',
+    registerCta: '{short}の\n解説BOOKを無料で受け取る →', // 2026-11-04 タイプ名入りに（{short}＝types[].short）。旧：'詳しい結果を無料で受け取る →'
     registerNote: 'お名前とメールアドレスだけ。1分で終わります。',
     mockNotice: 'モックアップのため、登録ページはまだつながっていません',
     placeholderText: 'イラスト差し替え予定',
@@ -685,6 +691,7 @@ body.en-immersive .freetextSec { display: none !important; }
       }
       var lock = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b9561f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
       var href = type.registerUrl ? withTrackId(type, type.registerUrl) : '#';
+      var cta = nl(CONFIG.registerCta.replace('{short}', type.short || 'あなたのタイプ'));
       app.innerHTML = '<div class="en-screen">' +
         '<section class="en-result" style="--type-bg:' + esc(type.bg) + '"><div class="en-chips"><span class="en-chip is-free">診断結果</span></div>' +
         '<p class="en-result-lead">' + esc(CONFIG.resultLead) + '</p>' +
@@ -695,16 +702,16 @@ body.en-immersive .freetextSec { display: none !important; }
         '<div class="en-bubble">' + esc(type.hook) + '</div></section>' +
         '<div class="en-more"><span>' + esc(CONFIG.moreText) + '</span></div>' +
         '<section class="en-locked"><p class="en-sec">' + nl(CONFIG.lockedTitle) + (CONFIG.lockedTitleTag ? '<br><span class="en-nb">' + esc(CONFIG.lockedTitleTag) + '</span>' : '') + '</p>' +
-        CONFIG.lockedItems.map(function (t) { return '<div class="en-lock">' + lock + '<span>' + esc(t) + '</span></div>'; }).join('') +
+        (type.locked ? type.locked.concat(CONFIG.lockedItems.slice(2)) : CONFIG.lockedItems).map(function (t) { return '<div class="en-lock">' + lock + '<span>' + esc(t) + '</span></div>'; }).join('') +
         '<div class="en-book">' + book3d(type, 92) + '<div><b>' + esc(CONFIG.bookLead) + '</b><span>' + esc(CONFIG.bookNote) + '</span></div></div>' +
         '</section>' + studentVoices() +
-        '<div class="en-cta is-static"><a class="en-btn" href="' + esc(href) + '">' + esc(CONFIG.registerCta) + '</a><small>' + esc(CONFIG.registerNote) + '</small></div>' +
+        '<div class="en-cta is-static"><a class="en-btn" href="' + esc(href) + '">' + cta + '</a><small>' + esc(CONFIG.registerNote) + '</small></div>' +
         '<button type="button" class="en-retry">もう一度診断する</button></div>';
 
       var reg = app.querySelector('.en-cta.is-static .en-btn');
       var bar = document.createElement('div');
       bar.className = 'en-sticky';
-      bar.innerHTML = '<a class="en-btn" href="' + esc(href) + '">' + esc(CONFIG.registerCta) + '</a>';
+      bar.innerHTML = '<a class="en-btn" href="' + esc(href) + '">' + cta + '</a>';
       app.appendChild(bar);
       var typeLabel = plain(type.name);
       if (!resultTracked) { resultTracked = true; px('DiagnosisComplete', { content_name: typeLabel }, true); }
